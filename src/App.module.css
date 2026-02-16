@@ -1,0 +1,121 @@
+.root {
+    min-height: 100vh;
+    background-color: hsl(var(--bg-secondary));
+    color: hsl(var(--text-primary));
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerContainer {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.titleGroup {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.main {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    flex: 1;
+    /* Fill remaining height */
+    display: flex;
+    flex-direction: column;
+    /* Ensure main has height for children to fill */
+    min-height: 0;
+}
+
+/* Home Mode Grid */
+.homeGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 56rem;
+    /* max-w-4xl */
+    margin: 5rem auto 0;
+}
+
+@media (min-width: 768px) {
+    .homeGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.cardHover {
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.cardHoverPrimary:hover {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+.cardHoverChart:hover {
+    border-color: hsl(var(--chart-3));
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+.cardInner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+    height: 16rem;
+}
+
+.iconWrapper {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: 9999px;
+}
+
+.homeTitle {
+    font-size: 1.25rem;
+    /* text-xl */
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.homeDesc {
+    color: hsl(var(--text-secondary));
+}
+
+.placeholder {
+    text-align: center;
+    padding: 5rem 0;
+}
+
+.placeholderTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}

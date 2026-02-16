@@ -1,0 +1,71 @@
+.dropzone {
+    border: 2px dashed hsl(var(--border-color));
+    border-radius: 0.75rem;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    background-color: hsl(var(--bg-secondary));
+    position: relative;
+    overflow: hidden;
+}
+
+.dropzone:hover,
+.active {
+    border-color: hsl(var(--primary));
+    background-color: hsl(var(--primary) / 0.05);
+    /* Using hsl color with opacity */
+}
+
+/* For browsers not supporting hsl alpha syntax yet, fallback or ensure primary is strict color */
+.active {
+    border-color: hsl(221, 83%, 53%);
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.iconContainer {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 9999px;
+    background-color: hsl(var(--muted));
+    margin-bottom: 1.5rem;
+    color: hsl(var(--text-secondary));
+}
+
+.dropzone:hover .iconContainer,
+.active .iconContainer {
+    background-color: hsl(var(--primary) / 0.1);
+    color: hsl(var(--primary));
+}
+
+.title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: hsl(var(--text-primary));
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: hsl(var(--text-secondary));
+    margin-bottom: 1.5rem;
+}
+
+.fileList {
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+.fileItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border-color));
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+}

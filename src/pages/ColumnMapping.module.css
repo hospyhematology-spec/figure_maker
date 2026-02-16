@@ -1,0 +1,118 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.header {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.mappingGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.columnCard {
+    border: 1px solid hsl(var(--border-color));
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background-color: hsl(var(--card));
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: box-shadow 0.2s;
+    position: relative;
+}
+
+.columnCard:hover {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    border-color: hsl(var(--primary));
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.originalName {
+    font-weight: 600;
+    font-size: 1rem;
+    color: hsl(var(--text-primary));
+    word-break: break-all;
+}
+
+.typeBadge {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.typeDate {
+    background-color: hsl(var(--chart-2) / 0.2);
+    color: hsl(var(--chart-2));
+}
+
+.typeNumber {
+    background-color: hsl(var(--chart-1) / 0.2);
+    color: hsl(var(--chart-1));
+}
+
+.typeString {
+    background-color: hsl(var(--chart-3) / 0.2);
+    color: hsl(var(--chart-3));
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: hsl(var(--text-secondary));
+}
+
+.input,
+.select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid hsl(var(--border-color));
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    background-color: hsl(var(--bg-primary));
+    color: hsl(var(--text-primary));
+}
+
+.previewData {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px dashed hsl(var(--border-color));
+    font-size: 0.75rem;
+    color: hsl(var(--text-secondary));
+}
+
+.previewItem {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid hsl(var(--border-color));
+}

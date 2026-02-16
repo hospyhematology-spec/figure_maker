@@ -1,0 +1,97 @@
+:root {
+  /* Base Colors - Light Mode */
+  --bg-primary: 0 0% 100%;
+  --bg-secondary: 210 40% 98%;
+  --text-primary: 222 47% 11%;
+  --text-secondary: 215 16% 47%;
+  --border-color: 214 32% 91%;
+  
+  --primary: 221 83% 53%; /* Blue-600 */
+  --primary-hover: 221 83% 60%;
+  --primary-foreground: 210 40% 98%;
+  
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222 47.4% 11.2%;
+  
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  
+  --radius: 0.5rem;
+
+  /* Chart Colors (A palette of 30 distinct colors for medical data) */
+  --chart-1: 346 87% 65%;   /* Hot Pink */
+  --chart-2: 217 91% 60%;   /* Bright Blue */
+  --chart-3: 142 71% 45%;   /* Green */
+  --chart-4: 38 92% 50%;    /* Orange */
+  --chart-5: 262 83% 58%;   /* Purple */
+  --chart-6: 188 95% 42%;   /* Cyan */
+  --chart-7: 50 95% 50%;    /* Yellow (Use with caution on white bg) */
+  --chart-8: 320 70% 50%;   /* Magenta */
+  --chart-9: 120 40% 50%;   /* Dark Green */
+  --chart-10: 200 60% 50%;  /* Sky Blue */
+  /* Add more as needed in implementation */
+}
+
+/* Dark Mode Overrides */
+.dark {
+  --bg-primary: 224 71% 4%;
+  --bg-secondary: 220 20% 10%; /* Slightly lighter than bg-primary */
+  --text-primary: 210 40% 98%;
+  --text-secondary: 215 20% 65%;
+  --border-color: 217 20% 20%;
+  
+  --primary: 217 91% 60%;
+  --primary-foreground: 222 47.4% 11.2%;
+
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+
+  --card: 224 71% 4%;
+  --card-foreground: 210 40% 98%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: hsl(var(--bg-primary));
+  color: hsl(var(--text-primary));
+  line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 0.5rem; }
+.gap-4 { gap: 1rem; }
+.p-4 { padding: 1rem; }
+.rounded { border-radius: var(--radius); }
+.shadow { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
