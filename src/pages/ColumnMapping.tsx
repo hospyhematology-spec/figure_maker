@@ -112,7 +112,7 @@ export const ColumnMappingPage = ({ data, onBack, onNext }: ColumnMappingPagePro
                 <Button variant="outline" onClick={onBack}>
                     <ArrowLeft className="mr-2 h-4 w-4" /> Back
                 </Button>
-                <Button onClick={() => onNext(mappings)}>
+                <Button onClick={() => onNext(mappings.filter(m => m != null))}>
                     Next Step <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
             </div>
