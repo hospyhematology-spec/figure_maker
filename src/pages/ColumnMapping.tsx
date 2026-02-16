@@ -45,63 +45,67 @@ export const ColumnMappingPage = ({ data, onBack, onNext }: ColumnMappingPagePro
             </header>
 
             <div className={styles.mappingGrid}>
-                {mappings.map((col, idx) => (
-                    <div key={idx} className={`${styles.columnCard} ${col.type === 'ignore' ? 'opacity-50' : ''}`}>
-                        <div className={styles.cardHeader}>
-                            <span className={styles.originalName} title={col.originalName}>{col.originalName}</span>
-                            <span className={`${styles.typeBadge} ${styles['type' + (col.type.charAt(0).toUpperCase() + col.type.slice(1))] || ''}`}>
-                                {col.type}
-                            </span>
-                        </div>
+                {mappings.filter(col => col != null).map((col, idx) => {
+                    // Find the original index in the unfiltered array for handleUpdate
+                    const originalIdx = mappings.findIndex((m, i) => i >= idx && m === col);
+                    return (
+                        <div key={originalIdx} className={`${styles.columnCard} ${col.type === 'ignore' ? 'opacity-50' : ''}`}>
+                            <div className={styles.cardHeader}>
+                                <span className={styles.originalName} title={col.originalName}>{col.originalName}</span>
+                                <span className={`${styles.typeBadge} ${styles['type' + (col.type.charAt(0).toUpperCase() + col.type.slice(1))] || ''}`}>
+                                    {col.type}
+                                </span>
+                            </div>
 
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Type</label>
-                            <select
-                                className={styles.select}
-                                value={col.type}
-                                onChange={(e) => handleUpdate(idx, 'type', e.target.value as ColumnType)}
-                            >
-                                <option value="date">Date (X-Axis)</option>
-                                <option value="number">Number (Y-Axis)</option>
-                                <option value="string">Text / Series</option>
-                                <option value="category">Category</option>
-                                <option value="ignore">Ignore</option>
-                            </select>
-                        </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Type</label>
+                                <select
+                                    className={styles.select}
+                                    value={col.type}
+                                    onChange={(e) => handleUpdate(originalIdx, 'type', e.target.value as ColumnType)}
+                                >
+                                    <option value="date">Date (X-Axis)</option>
+                                    <option value="number">Number (Y-Axis)</option>
+                                    <option value="string">Text / Series</option>
+                                    <option value="category">Category</option>
+                                    <option value="ignore">Ignore</option>
+                                </select>
+                            </div>
 
-                        {col.type !== 'ignore' && (
-                            <>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Display Name</label>
-                                    <input
-                                        className={styles.input}
-                                        value={col.mappedName}
-                                        onChange={(e) => handleUpdate(idx, 'mappedName', e.target.value)}
-                                    />
-                                </div>
-
-                                {(col.type === 'number') && (
+                            {col.type !== 'ignore' && (
+                                <>
                                     <div className={styles.formGroup}>
-                                        <label className={styles.label}>Unit</label>
+                                        <label className={styles.label}>Display Name</label>
                                         <input
                                             className={styles.input}
-                                            value={col.unit ?? ''}
-                                            placeholder="e.g. mg/dL"
-                                            onChange={(e) => handleUpdate(idx, 'unit', e.target.value || undefined)}
+                                            value={col.mappedName}
+                                            onChange={(e) => handleUpdate(originalIdx, 'mappedName', e.target.value)}
                                         />
                                     </div>
-                                )}
-                            </>
-                        )}
 
-                        <div className={styles.previewData}>
-                            <strong>Sample: </strong>
-                            <span className={styles.previewItem}>
-                                {String(data.data[0]?.[col.originalName] ?? '')}
-                            </span>
+                                    {(col.type === 'number') && (
+                                        <div className={styles.formGroup}>
+                                            <label className={styles.label}>Unit</label>
+                                            <input
+                                                className={styles.input}
+                                                value={col.unit ?? ''}
+                                                placeholder="e.g. mg/dL"
+                                                onChange={(e) => handleUpdate(originalIdx, 'unit', e.target.value || undefined)}
+                                            />
+                                        </div>
+                                    )}
+                                </>
+                            )}
+
+                            <div className={styles.previewData}>
+                                <strong>Sample: </strong>
+                                <span className={styles.previewItem}>
+                                    {String(data.data[0]?.[col.originalName] ?? '')}
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             <div className={styles.actions}>
