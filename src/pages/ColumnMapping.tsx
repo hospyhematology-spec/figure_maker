@@ -85,9 +85,9 @@ export const ColumnMappingPage = ({ data, onBack, onNext }: ColumnMappingPagePro
                                         <label className={styles.label}>Unit</label>
                                         <input
                                             className={styles.input}
-                                            value={col.unit || ''}
+                                            value={col.unit ?? ''}
                                             placeholder="e.g. mg/dL"
-                                            onChange={(e) => handleUpdate(idx, 'unit', e.target.value)}
+                                            onChange={(e) => handleUpdate(idx, 'unit', e.target.value || undefined)}
                                         />
                                     </div>
                                 )}
