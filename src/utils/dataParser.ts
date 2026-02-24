@@ -15,7 +15,7 @@ export const parseFile = (file: File): Promise<ParseResult> => {
             try {
                 const data = e.target?.result;
                 // Use 'array' type for robustness with binary files
-                const workbook = XLSX.read(data, { type: 'array' });
+                const workbook = XLSX.read(data, { type: 'array', cellDates: true });
                 const firstSheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[firstSheetName];
 

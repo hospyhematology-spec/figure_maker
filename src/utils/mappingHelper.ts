@@ -43,10 +43,12 @@ export const autoDetectMappings = (parseResult: ParseResult): ColumnMapping[] =>
                     numberCount++;
                 }
 
-                // Check Date-like string
+                // Check Date-like string or Date object
                 // Simple distinct check: contains / or - or : which suggests format
                 const strVal = String(val);
-                if ((strVal.includes('/') || strVal.includes('-') || strVal.includes(':')) && !isNaN(Date.parse(strVal))) {
+                if (val instanceof Date && !isNaN(val.getTime())) {
+                    dateLikeCount++;
+                } else if ((strVal.includes('/') || strVal.includes('-') || strVal.includes(':')) && !isNaN(Date.parse(strVal))) {
                     dateLikeCount++;
                 }
             }
