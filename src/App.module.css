@@ -119,3 +119,37 @@
     font-weight: 700;
     margin-bottom: 1rem;
 }
+
+/* Step Indicator */
+.stepIndicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.stepActive {
+    font-weight: 700;
+    color: hsl(var(--primary));
+    background-color: hsla(var(--primary), 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+}
+
+.stepDone {
+    color: hsl(var(--text-secondary));
+    text-decoration: line-through;
+    padding: 0.25rem 0.75rem;
+}
+
+.stepInactive {
+    color: hsl(var(--text-secondary));
+    opacity: 0.5;
+    padding: 0.25rem 0.75rem;
+}
+
+.stepArrow {
+    color: hsl(var(--text-secondary));
+    font-size: 1.25rem;
+    line-height: 1;
+}

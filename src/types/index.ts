@@ -63,5 +63,4 @@ export interface ProjectState {
   mappings: ColumnMapping[];
   processedData: DataPoint[];
   figureConfig: FigureConfig;
-  tableConfig: any; // Placeholder
 }
