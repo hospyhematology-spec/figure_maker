@@ -27,7 +27,6 @@ export const FigureChart: React.FC<FigureChartProps> = ({
     series,
     height = 500
 }) => {
-    // Format dates for X-axis ticks
     const formatXAxis = (tickItem: number | string) => {
         try {
             // If we use timestamp number for X-axis domain need to format back
@@ -41,6 +40,11 @@ export const FigureChart: React.FC<FigureChartProps> = ({
         }
     };
 
+    // 使用されているYAxisのみを抽出（あるいはleft-1のみ常に表示）
+    const activeYAxes = yAxes.filter(axis =>
+        series.some(s => s.yAxisId === axis.id) || axis.id === 'left-1'
+    );
+
     return (
         <div style={{ width: '100%', height }}>
             <ResponsiveContainer>
@@ -48,10 +52,9 @@ export const FigureChart: React.FC<FigureChartProps> = ({
                     data={data}
                     margin={{
                         top: 20,
-                        // Add extra margin if there are multiple right axes
-                        right: 30 + Math.max(0, yAxes.filter(a => a.position === 'right').length - 1) * 60,
-                        // Add extra margin if there are multiple left axes
-                        left: 20 + Math.max(0, yAxes.filter(a => a.position === 'left').length - 1) * 60,
+                        // 使用中の軸の数だけでマージンを計算する
+                        right: 30 + Math.max(0, activeYAxes.filter(a => a.position === 'right').length - 1) * 60,
+                        left: 20 + Math.max(0, activeYAxes.filter(a => a.position === 'left').length - 1) * 60,
                         bottom: 20,
                     }}
                 >
@@ -68,7 +71,7 @@ export const FigureChart: React.FC<FigureChartProps> = ({
                         tick={{ fill: 'hsl(var(--text-secondary))', fontSize: 12 }}
                     />
 
-                    {yAxes.map((axis) => {
+                    {activeYAxes.map((axis) => {
                         // For Recharts to not overlap, we need to manually place them or use orientation smartly
                         // Recharts typically handles multiple YAxis natively if we give them different yAxisId 
                         // and they stack outwards if we just render them. 

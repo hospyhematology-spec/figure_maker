@@ -44,8 +44,6 @@ export interface FigureConfig {
   title?: string;
   width: number;
   height: number;
-  chartWidth?: number | 'auto'; // Width for the chart component itself
-  chartHeight?: number; // Height for the chart component itself
   xAxis: AxisConfig;
   yAxes: AxisConfig[];
   series: SeriesConfig[];
