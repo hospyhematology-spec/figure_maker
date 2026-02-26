@@ -207,28 +207,85 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                     </div>
 
                     <div className={styles.controlGroup}>
-                        <div className={styles.groupTitle}>Axis Labels</div>
-                        <div className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">
+                        <div className={styles.groupTitle}>Axis Settings</div>
+                        <div className="flex flex-col gap-4 max-h-80 overflow-y-auto pr-2">
                             {config.yAxes.map((axis) => {
-                                // Only show label inputs for axes that are actually used by at least one series
-                                // Or always show first left and right
                                 const isUsed = config.series.some(s => s.yAxisId === axis.id);
                                 const isPrimary = axis.id === 'left-1' || axis.id === 'right-1';
 
                                 if (!isUsed && !isPrimary) return null;
 
                                 return (
-                                    <div key={`label-${axis.id}`} className="flex flex-col gap-1">
-                                        <label className="text-xs font-medium text-[hsl(var(--text-secondary))]">{axis.id.replace('-', ' ').toUpperCase()}</label>
-                                        <input
-                                            className="p-2 border rounded text-sm bg-[hsl(var(--bg-primary))]"
-                                            value={axis.label || ''}
-                                            onChange={(e) => setConfig(prev => ({
-                                                ...prev,
-                                                yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, label: e.target.value } : a)
-                                            }))}
-                                            placeholder={`Label for ${axis.id}`}
-                                        />
+                                    <div key={`setting-${axis.id}`} className="flex flex-col gap-2 p-2 bg-[hsl(var(--bg-secondary))] rounded border border-[hsl(var(--border-color))]">
+                                        <label className="text-sm font-bold text-[hsl(var(--text-primary))]">
+                                            {axis.id.replace('-', ' ').toUpperCase()}
+                                        </label>
+
+                                        <div className="flex flex-col gap-1">
+                                            <label className="text-xs text-[hsl(var(--text-secondary))]">Label</label>
+                                            <input
+                                                className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
+                                                value={axis.label || ''}
+                                                onChange={(e) => setConfig(prev => ({
+                                                    ...prev,
+                                                    yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, label: e.target.value } : a)
+                                                }))}
+                                                placeholder="e.g. mg/dL"
+                                            />
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div className="flex flex-col gap-1">
+                                                <label className="text-xs text-[hsl(var(--text-secondary))]">Min</label>
+                                                <input
+                                                    type="text"
+                                                    className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
+                                                    value={axis.min !== undefined ? axis.min : 'auto'}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value === 'auto' || e.target.value === '' ? 'auto' : Number(e.target.value);
+                                                        setConfig(prev => ({
+                                                            ...prev,
+                                                            yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, min: isNaN(val as number) && val !== 'auto' ? 'auto' : val } : a)
+                                                        }));
+                                                    }}
+                                                    placeholder="auto"
+                                                />
+                                            </div>
+                                            <div className="flex flex-col gap-1">
+                                                <label className="text-xs text-[hsl(var(--text-secondary))]">Max</label>
+                                                <input
+                                                    type="text"
+                                                    className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
+                                                    value={axis.max !== undefined ? axis.max : 'auto'}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value === 'auto' || e.target.value === '' ? 'auto' : Number(e.target.value);
+                                                        setConfig(prev => ({
+                                                            ...prev,
+                                                            yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, max: isNaN(val as number) && val !== 'auto' ? 'auto' : val } : a)
+                                                        }));
+                                                    }}
+                                                    placeholder="auto"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col gap-1">
+                                            <label className="text-xs text-[hsl(var(--text-secondary))]">Ticks (Count)</label>
+                                            <input
+                                                type="number"
+                                                className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
+                                                value={axis.tickCount || ''}
+                                                onChange={(e) => {
+                                                    const val = e.target.value ? parseInt(e.target.value, 10) : undefined;
+                                                    setConfig(prev => ({
+                                                        ...prev,
+                                                        yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, tickCount: val } : a)
+                                                    }));
+                                                }}
+                                                placeholder="auto (e.g. 5)"
+                                                min="2"
+                                                max="100"
+                                            />
+                                        </div>
                                     </div>
                                 );
                             })}

@@ -48,8 +48,10 @@ export const FigureChart: React.FC<FigureChartProps> = ({
                     data={data}
                     margin={{
                         top: 20,
-                        right: 30,
-                        left: 20,
+                        // Add extra margin if there are multiple right axes
+                        right: 30 + Math.max(0, yAxes.filter(a => a.position === 'right').length - 1) * 60,
+                        // Add extra margin if there are multiple left axes
+                        left: 20 + Math.max(0, yAxes.filter(a => a.position === 'left').length - 1) * 60,
                         bottom: 20,
                     }}
                 >
@@ -66,24 +68,33 @@ export const FigureChart: React.FC<FigureChartProps> = ({
                         tick={{ fill: 'hsl(var(--text-secondary))', fontSize: 12 }}
                     />
 
-                    {yAxes.map((axis) => (
-                        <YAxis
-                            key={axis.id}
-                            yAxisId={axis.id}
-                            orientation={axis.position === 'right' ? 'right' : 'left'}
-                            domain={axis.domain || ['auto', 'auto']}
-                            stroke="hsl(var(--text-secondary))"
-                            tick={{ fill: 'hsl(var(--text-secondary))', fontSize: 12 }}
-                            tickFormatter={(val) => val.toLocaleString()} // Add basic number formatting
-                            label={{
-                                value: axis.label,
-                                angle: -90,
-                                position: axis.position === 'right' ? 'insideRight' : 'insideLeft',
-                                fill: 'hsl(var(--text-secondary))',
-                                style: { textAnchor: 'middle' }
-                            }}
-                        />
-                    ))}
+                    {yAxes.map((axis) => {
+                        // For Recharts to not overlap, we need to manually place them or use orientation smartly
+                        // Recharts typically handles multiple YAxis natively if we give them different yAxisId 
+                        // and they stack outwards if we just render them. 
+                        // We will rely on Recharts' default layout for multiple axes on same side, but apply user domain.
+
+                        return (
+                            <YAxis
+                                key={axis.id}
+                                yAxisId={axis.id}
+                                orientation={axis.position === 'right' ? 'right' : 'left'}
+                                domain={axis.min !== undefined || axis.max !== undefined ? [axis.min ?? 'auto', axis.max ?? 'auto'] : (axis.domain || ['auto', 'auto'])}
+                                tickCount={axis.tickCount}
+                                stroke="hsl(var(--text-secondary))"
+                                tick={{ fill: 'hsl(var(--text-secondary))', fontSize: 12 }}
+                                tickFormatter={(val) => val.toLocaleString()} // Add basic number formatting
+                                label={{
+                                    value: axis.label,
+                                    angle: -90,
+                                    position: axis.position === 'right' ? 'insideRight' : 'insideLeft',
+                                    fill: 'hsl(var(--text-secondary))',
+                                    style: { textAnchor: 'middle' },
+                                    offset: 0
+                                }}
+                            />
+                        );
+                    })}
 
                     <Tooltip
                         labelFormatter={(value) => {

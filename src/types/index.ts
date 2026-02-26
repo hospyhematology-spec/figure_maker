@@ -32,6 +32,9 @@ export interface AxisConfig {
   position: 'left' | 'right' | 'bottom' | 'top';
   label?: string;
   unit?: string;
+  min?: number | 'auto';
+  max?: number | 'auto';
+  tickCount?: number;
   domain?: [number | 'auto', number | 'auto'];
   scale?: 'linear' | 'log' | 'time';
   reversed?: boolean;
