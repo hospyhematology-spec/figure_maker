@@ -40,7 +40,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
     const [config, setConfig] = useState<FigureConfig>({
         width: 800,
         height: 500,
-        chartWidth: 'auto',
+        chartWidth: 1000,
         chartHeight: 600,
         showLegend: true,
         showGrid: true,
@@ -216,13 +216,20 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                 <input
                                     type="text"
                                     className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
-                                    value={config.chartWidth !== undefined ? config.chartWidth : 'auto'}
+                                    value={config.chartWidth !== undefined ? config.chartWidth : ''}
                                     onChange={(e) => {
-                                        const val = e.target.value === 'auto' || e.target.value === '' ? 'auto' : Number(e.target.value);
-                                        setConfig(prev => ({
-                                            ...prev,
-                                            chartWidth: isNaN(val as number) && val !== 'auto' ? 'auto' : val
-                                        }));
+                                        const rawValue = e.target.value;
+                                        if (rawValue === 'auto' || rawValue === '') {
+                                            setConfig(prev => ({ ...prev, chartWidth: 'auto' }));
+                                        } else {
+                                            const numericValue = Number(rawValue);
+                                            // ユーザーが入力中の文字列（例: "100"など）をそのまま許容するため
+                                            // 'auto'以外の時は直接数値をいれる。ただし全消し時などは''経由でautoになる
+                                            setConfig(prev => ({
+                                                ...prev,
+                                                chartWidth: isNaN(numericValue) ? prev.chartWidth : numericValue
+                                            }));
+                                        }
                                     }}
                                     placeholder="auto (e.g. 1000)"
                                 />
