@@ -29,12 +29,33 @@ export const FigureChart: React.FC<FigureChartProps> = ({
 }) => {
     const formatXAxis = (tickItem: number | string) => {
         try {
-            // If we use timestamp number for X-axis domain need to format back
+            let dateVal: Date;
             if (typeof tickItem === 'number') {
-                return format(new Date(tickItem), 'MM/dd');
+                dateVal = new Date(tickItem);
+            } else {
+                dateVal = new Date(tickItem);
             }
-            // If using ISO string (though we target number type)
-            return format(new Date(tickItem), 'MM/dd');
+
+            // day表示の場合の処理
+            if (xAxis.tickFormat === 'day0' || xAxis.tickFormat === 'day1') {
+                // data配列の最初（インデックス0）が最も古い日付（ソート済前提）
+                if (data.length > 0) {
+                    const firstDateVal = data[0]._timestamp || data[0].date || 0;
+                    const firstDate = new Date(firstDateVal as string | number);
+                    // 時間差をミリ秒で計算し、日数に変換 (四捨五入して整数日へ)
+                    const diffTime = Math.abs(dateVal.getTime() - firstDate.getTime());
+                    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (xAxis.tickFormat === 'day0') {
+                        return `Day ${diffDays}`;
+                    } else {
+                        return `Day ${diffDays + 1}`;
+                    }
+                }
+            }
+
+            // デフォルトは日付表示
+            return format(dateVal, 'MM/dd');
         } catch (e) {
             return String(tickItem);
         }

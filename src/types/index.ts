@@ -38,6 +38,7 @@ export interface AxisConfig {
   domain?: [number | 'auto', number | 'auto'];
   scale?: 'linear' | 'log' | 'time';
   reversed?: boolean;
+  tickFormat?: 'date' | 'day0' | 'day1'; // For X axis specific formatting
 }
 
 export interface FigureConfig {

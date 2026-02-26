@@ -207,6 +207,30 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                     </div>
 
                     <div className={styles.controlGroup}>
+                        <div className={styles.groupTitle}>X-Axis Settings</div>
+                        <div className="flex flex-col gap-2 p-2 bg-[hsl(var(--bg-secondary))] rounded border border-[hsl(var(--border-color))]">
+                            <label className="text-sm font-bold text-[hsl(var(--text-primary))]">
+                                X-AXIS (DATE)
+                            </label>
+                            <div className="flex flex-col gap-1">
+                                <label className="text-xs text-[hsl(var(--text-secondary))]">Display Format</label>
+                                <select
+                                    className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
+                                    value={config.xAxis.tickFormat || 'date'}
+                                    onChange={(e) => setConfig(prev => ({
+                                        ...prev,
+                                        xAxis: { ...prev.xAxis, tickFormat: e.target.value as 'date' | 'day0' | 'day1' }
+                                    }))}
+                                >
+                                    <option value="date">Date (e.g. 12/31)</option>
+                                    <option value="day0">Day 0 Start (Day 0, Day 1...)</option>
+                                    <option value="day1">Day 1 Start (Day 1, Day 2...)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={styles.controlGroup}>
                         <div className={styles.groupTitle}>Axis Settings</div>
                         <div className="flex flex-col gap-4 max-h-80 overflow-y-auto pr-2">
                             {config.yAxes.map((axis) => {
