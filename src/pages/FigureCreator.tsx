@@ -40,6 +40,8 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
     const [config, setConfig] = useState<FigureConfig>({
         width: 800,
         height: 500,
+        chartWidth: 'auto',
+        chartHeight: 600,
         showLegend: true,
         showGrid: true,
         xAxis: { id: 'x-axis', position: 'bottom', label: 'Date', scale: 'time' },
@@ -207,6 +209,47 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                     </div>
 
                     <div className={styles.controlGroup}>
+                        <div className={styles.groupTitle}>Chart Dimensions</div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-1">
+                                <label className="text-xs text-[hsl(var(--text-secondary))]">Width (px or 'auto')</label>
+                                <input
+                                    type="text"
+                                    className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
+                                    value={config.chartWidth !== undefined ? config.chartWidth : 'auto'}
+                                    onChange={(e) => {
+                                        const val = e.target.value === 'auto' || e.target.value === '' ? 'auto' : Number(e.target.value);
+                                        setConfig(prev => ({
+                                            ...prev,
+                                            chartWidth: isNaN(val as number) && val !== 'auto' ? 'auto' : val
+                                        }));
+                                    }}
+                                    placeholder="auto (e.g. 1000)"
+                                />
+                                <span className="text-[10px] text-[hsl(var(--text-secondary))]">Set to 'auto' to fit container. Increase to make chart wider and prevent squishing.</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <label className="text-xs text-[hsl(var(--text-secondary))]">Height (px)</label>
+                                <input
+                                    type="number"
+                                    className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
+                                    value={config.chartHeight || 600}
+                                    onChange={(e) => {
+                                        const val = e.target.value ? parseInt(e.target.value, 10) : 600;
+                                        setConfig(prev => ({
+                                            ...prev,
+                                            chartHeight: val
+                                        }));
+                                    }}
+                                    placeholder="600"
+                                    min="200"
+                                    max="3000"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={styles.controlGroup}>
                         <div className={styles.groupTitle}>Axis Settings</div>
                         <div className="flex flex-col gap-4 max-h-80 overflow-y-auto pr-2">
                             {config.yAxes.map((axis) => {
@@ -304,15 +347,20 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
             </aside>
 
             <main className={styles.chartArea} ref={chartRef}>
-                <div className="flex-1 w-full h-full min-h-0 flex flex-col">
+                <div className="flex-1 w-full h-full min-h-0 flex flex-col overflow-x-auto overflow-y-auto">
                     {dataPoints.length > 0 ? (
-                        <FigureChart
-                            data={dataPoints}
-                            xAxis={config.xAxis}
-                            yAxes={config.yAxes}
-                            series={config.series}
-                            height={600}
-                        />
+                        <div style={{
+                            minWidth: config.chartWidth === 'auto' ? '100%' : `${config.chartWidth}px`,
+                            height: '100%'
+                        }}>
+                            <FigureChart
+                                data={dataPoints}
+                                xAxis={config.xAxis}
+                                yAxes={config.yAxes}
+                                series={config.series}
+                                height={config.chartHeight || 600}
+                            />
+                        </div>
                     ) : (
                         <div className="h-full flex flex-col items-center justify-center text-[hsl(var(--muted-foreground))]">
                             <p className="text-lg">No data available to display.</p>
