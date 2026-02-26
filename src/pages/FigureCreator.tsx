@@ -40,8 +40,8 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
     const [config, setConfig] = useState<FigureConfig>({
         width: 800,
         height: 500,
-        chartWidth: 1000,
-        chartHeight: 600,
+        chartWidth: 600, // 横:縦=1:4 になるよう設定
+        chartHeight: 2400,
         showLegend: true,
         showGrid: true,
         xAxis: { id: 'x-axis', position: 'bottom', label: 'Date', scale: 'time' },
@@ -219,16 +219,27 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                     value={config.chartWidth !== undefined ? config.chartWidth : ''}
                                     onChange={(e) => {
                                         const rawValue = e.target.value;
-                                        if (rawValue === 'auto' || rawValue === '') {
+                                        if (rawValue === 'auto') {
                                             setConfig(prev => ({ ...prev, chartWidth: 'auto' }));
+                                        } else if (rawValue === '') {
+                                            // 空文字の場合は空欄として保持（再入力を受け付けるため）
+                                            setConfig(prev => ({ ...prev, chartWidth: '' as unknown as 'auto' }));
                                         } else {
                                             const numericValue = Number(rawValue);
-                                            // ユーザーが入力中の文字列（例: "100"など）をそのまま許容するため
-                                            // 'auto'以外の時は直接数値をいれる。ただし全消し時などは''経由でautoになる
-                                            setConfig(prev => ({
-                                                ...prev,
-                                                chartWidth: isNaN(numericValue) ? prev.chartWidth : numericValue
-                                            }));
+                                            // 入力中の文字列をそのまま許容し、数値以外の場合は無視
+                                            if (!isNaN(numericValue)) {
+                                                setConfig(prev => ({ ...prev, chartWidth: numericValue }));
+                                            } else {
+                                                // auto以外の無効な文字列（例えば'100a'）は変更を破棄して維持するなどの対応が可能だが、
+                                                // 一旦はそのままの挙動を維持し、パースできなければ更新しない。
+                                                // "100" などの途中の文字列がNumber変換できれば反映される。
+                                            }
+                                        }
+                                    }}
+                                    onBlur={(e) => {
+                                        // フォーカスが外れた時に空欄だったら'auto'に戻す
+                                        if (e.target.value === '') {
+                                            setConfig(prev => ({ ...prev, chartWidth: 'auto' }));
                                         }
                                     }}
                                     placeholder="auto (e.g. 1000)"
