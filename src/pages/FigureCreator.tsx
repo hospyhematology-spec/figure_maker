@@ -40,6 +40,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
     const [config, setConfig] = useState<FigureConfig>({
         width: 800,
         height: 500,
+        chartWidth: 'auto',
         showLegend: true,
         showGrid: true,
         xAxis: { id: 'x-axis', position: 'bottom', label: 'Date', scale: 'time' },
@@ -207,6 +208,48 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                     </div>
 
                     <div className={styles.controlGroup}>
+                        <div className={styles.groupTitle}>Chart Layout</div>
+                        <div className="flex flex-col gap-2 p-2 bg-[hsl(var(--bg-secondary))] rounded border border-[hsl(var(--border-color))]">
+                            <label className="text-sm font-bold text-[hsl(var(--text-primary))]">
+                                GRAPH WIDTH
+                            </label>
+                            <div className="flex flex-col gap-1">
+                                <label className="text-xs text-[hsl(var(--text-secondary))]">Width (px or 'auto')</label>
+                                <input
+                                    type="text"
+                                    className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
+                                    value={config.chartWidth !== undefined ? config.chartWidth : ''}
+                                    onChange={(e) => {
+                                        const rawValue = e.target.value;
+                                        if (rawValue === 'auto') {
+                                            setConfig(prev => ({ ...prev, chartWidth: 'auto' }));
+                                        } else if (rawValue === '') {
+                                            // 途中空欄にしても許容
+                                            setConfig(prev => ({ ...prev, chartWidth: '' as unknown as 'auto' }));
+                                        } else {
+                                            const numericValue = Number(rawValue);
+                                            // 入力が数値として解釈できればそのまま反映
+                                            if (!isNaN(numericValue)) {
+                                                setConfig(prev => ({ ...prev, chartWidth: numericValue }));
+                                            }
+                                        }
+                                    }}
+                                    onBlur={(e) => {
+                                        // フォーカスが外れた際に空欄ならautoに戻す
+                                        if (e.target.value === '') {
+                                            setConfig(prev => ({ ...prev, chartWidth: 'auto' }));
+                                        }
+                                    }}
+                                    placeholder="auto (e.g. 1000)"
+                                />
+                                <span className="text-[10px] text-[hsl(var(--text-secondary))]">
+                                    Leave blank or 'auto' for dynamic expansion. Enter a number to fix width.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={styles.controlGroup}>
                         <div className={styles.groupTitle}>X-Axis Settings</div>
                         <div className="flex flex-col gap-2 p-2 bg-[hsl(var(--bg-secondary))] rounded border border-[hsl(var(--border-color))]">
                             <label className="text-sm font-bold text-[hsl(var(--text-primary))]">
@@ -331,8 +374,10 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                 <div className="flex-1 w-full h-full min-h-0 flex flex-col overflow-x-auto overflow-y-auto">
                     {dataPoints.length > 0 ? (
                         <div style={{
-                            // データ量に応じて見やすい幅を自動確保 (1データあたり30px、最低800px)
-                            minWidth: `${Math.max(800, dataPoints.length * 30)}px`,
+                            // 手動指定(数値)ならその幅、autoならデータ数に応じた動的計算を適用
+                            minWidth: (typeof config.chartWidth === 'number' && !isNaN(config.chartWidth))
+                                ? `${config.chartWidth}px`
+                                : `${Math.max(800, dataPoints.length * 30)}px`,
                             height: '100%'
                         }}>
                             <FigureChart
