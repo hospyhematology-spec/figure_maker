@@ -44,8 +44,14 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
         showGrid: true,
         xAxis: { id: 'x-axis', position: 'bottom', label: 'Date', scale: 'time' },
         yAxes: [
-            { id: 'left', position: 'left', label: 'Value', scale: 'linear' },
-            { id: 'right', position: 'right', label: '', scale: 'linear' }
+            { id: 'left-1', position: 'left', label: 'Value', scale: 'linear' },
+            { id: 'left-2', position: 'left', label: '', scale: 'linear' },
+            { id: 'left-3', position: 'left', label: '', scale: 'linear' },
+            { id: 'left-4', position: 'left', label: '', scale: 'linear' },
+            { id: 'right-1', position: 'right', label: '', scale: 'linear' },
+            { id: 'right-2', position: 'right', label: '', scale: 'linear' },
+            { id: 'right-3', position: 'right', label: '', scale: 'linear' },
+            { id: 'right-4', position: 'right', label: '', scale: 'linear' }
         ],
         series: []
     });
@@ -60,7 +66,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                 dataKey: m.mappedName,
                 color: COLORS[idx % COLORS.length],
                 type: 'line',
-                yAxisId: 'left', // Default to left axis
+                yAxisId: (idx < 4 ? `left-${idx + 1}` : 'left-1') as SeriesConfig['yAxisId'], // Default assigned to left-1~4
                 lineStyle: 'solid'
             }));
 
@@ -173,8 +179,18 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                     onChange={(e) => handleSeriesUpdate(series.id, 'yAxisId', e.target.value)}
                                     title="Axis Assignment"
                                 >
-                                    <option value="left">Left (L)</option>
-                                    <option value="right">Right (R)</option>
+                                    <optgroup label="Left Axes">
+                                        <option value="left-1">Left 1</option>
+                                        <option value="left-2">Left 2</option>
+                                        <option value="left-3">Left 3</option>
+                                        <option value="left-4">Left 4</option>
+                                    </optgroup>
+                                    <optgroup label="Right Axes">
+                                        <option value="right-1">Right 1</option>
+                                        <option value="right-2">Right 2</option>
+                                        <option value="right-3">Right 3</option>
+                                        <option value="right-4">Right 4</option>
+                                    </optgroup>
                                 </select>
 
                                 <select
@@ -192,27 +208,30 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
 
                     <div className={styles.controlGroup}>
                         <div className={styles.groupTitle}>Axis Labels</div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs font-medium text-[hsl(var(--text-secondary))]">Left Axis</label>
-                            <input
-                                className="p-2 border rounded text-sm bg-[hsl(var(--bg-primary))]"
-                                value={config.yAxes.find(a => a.id === 'left')?.label || ''}
-                                onChange={(e) => setConfig(prev => ({
-                                    ...prev,
-                                    yAxes: prev.yAxes.map(a => a.id === 'left' ? { ...a, label: e.target.value } : a)
-                                }))}
-                                placeholder="Label (e.g. mg/dL)"
-                            />
-                            <label className="text-xs font-medium text-[hsl(var(--text-secondary))] mt-2">Right Axis</label>
-                            <input
-                                className="p-2 border rounded text-sm bg-[hsl(var(--bg-primary))]"
-                                value={config.yAxes.find(a => a.id === 'right')?.label || ''}
-                                onChange={(e) => setConfig(prev => ({
-                                    ...prev,
-                                    yAxes: prev.yAxes.map(a => a.id === 'right' ? { ...a, label: e.target.value } : a)
-                                }))}
-                                placeholder="Label (Optional)"
-                            />
+                        <div className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">
+                            {config.yAxes.map((axis) => {
+                                // Only show label inputs for axes that are actually used by at least one series
+                                // Or always show first left and right
+                                const isUsed = config.series.some(s => s.yAxisId === axis.id);
+                                const isPrimary = axis.id === 'left-1' || axis.id === 'right-1';
+
+                                if (!isUsed && !isPrimary) return null;
+
+                                return (
+                                    <div key={`label-${axis.id}`} className="flex flex-col gap-1">
+                                        <label className="text-xs font-medium text-[hsl(var(--text-secondary))]">{axis.id.replace('-', ' ').toUpperCase()}</label>
+                                        <input
+                                            className="p-2 border rounded text-sm bg-[hsl(var(--bg-primary))]"
+                                            value={axis.label || ''}
+                                            onChange={(e) => setConfig(prev => ({
+                                                ...prev,
+                                                yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, label: e.target.value } : a)
+                                            }))}
+                                            placeholder={`Label for ${axis.id}`}
+                                        />
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>

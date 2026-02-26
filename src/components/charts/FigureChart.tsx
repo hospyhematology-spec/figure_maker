@@ -107,7 +107,7 @@ export const FigureChart: React.FC<FigureChartProps> = ({
                         <Line
                             key={s.id}
                             yAxisId={s.yAxisId}
-                            type="monotone" // or linear based on config
+                            type="linear" // Changed from monotone to linear (straight lines)
                             dataKey={s.dataKey}
                             name={s.name}
                             stroke={s.color}

@@ -87,11 +87,23 @@ export const ColumnMappingPage = ({ data, onBack, onNext }: ColumnMappingPagePro
                                         <div className={styles.formGroup}>
                                             <label className={styles.label}>Unit</label>
                                             <input
+                                                list={`unit-presets-${originalIdx}`}
                                                 className={styles.input}
                                                 value={col.unit ?? ''}
                                                 placeholder="e.g. mg/dL"
                                                 onChange={(e) => handleUpdate(originalIdx, 'unit', e.target.value || undefined)}
                                             />
+                                            <datalist id={`unit-presets-${originalIdx}`}>
+                                                <option value="10^3/μL" />
+                                                <option value="10^6/μL" />
+                                                <option value="/μL" />
+                                                <option value="g/dL" />
+                                                <option value="mg/dL" />
+                                                <option value="IU/L" />
+                                                <option value="mmol/L" />
+                                                <option value="%" />
+                                                <option value="fL" />
+                                            </datalist>
                                         </div>
                                     )}
                                 </>
