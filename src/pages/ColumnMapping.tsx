@@ -95,6 +95,7 @@ export const ColumnMappingPage = ({ data, onBack, onNext }: ColumnMappingPagePro
                                             />
                                             <datalist id={`unit-presets-${originalIdx}`}>
                                                 <option value="10^3/μL" />
+                                                <option value="10^4/μL" />
                                                 <option value="10^6/μL" />
                                                 <option value="/μL" />
                                                 <option value="g/dL" />

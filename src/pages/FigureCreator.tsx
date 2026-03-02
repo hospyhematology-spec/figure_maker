@@ -45,7 +45,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
         showGrid: true,
         xAxis: { id: 'x-axis', position: 'bottom', label: 'Date', scale: 'time' },
         yAxes: [
-            { id: 'left-1', position: 'left', label: 'Value', scale: 'linear' },
+            { id: 'left-1', position: 'left', label: '', scale: 'linear' },
             { id: 'left-2', position: 'left', label: '', scale: 'linear' },
             { id: 'left-3', position: 'left', label: '', scale: 'linear' },
             { id: 'left-4', position: 'left', label: '', scale: 'linear' },
