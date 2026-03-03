@@ -35,11 +35,11 @@ export const ColumnMappingPage = ({ data, onBack, onNext }: ColumnMappingPagePro
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <h2 className="text-2xl font-bold mb-2">2. Map Columns</h2>
+                <h2 className="text-2xl font-bold mb-2">2. データの割り当て</h2>
                 <p className="text-[hsl(var(--text-secondary))]">
-                    Assign types and roles to your data columns.
+                    各列（カラム）のデータ型やグラフでの役割を設定してください。
                     <Button variant="ghost" size="sm" onClick={handleReset} className="ml-4 text-xs inline-flex items-center gap-1 border border-dashed border-[hsl(var(--border-color))]">
-                        <RefreshCw size={12} /> Auto-Detect
+                        <RefreshCw size={12} /> 自動判定
                     </Button>
                 </p>
             </header>
@@ -58,24 +58,24 @@ export const ColumnMappingPage = ({ data, onBack, onNext }: ColumnMappingPagePro
                             </div>
 
                             <div className={styles.formGroup}>
-                                <label className={styles.label}>Type</label>
+                                <label className={styles.label}>データ型 (Type)</label>
                                 <select
                                     className={styles.select}
                                     value={col.type}
                                     onChange={(e) => handleUpdate(originalIdx, 'type', e.target.value as ColumnType)}
                                 >
-                                    <option value="date">Date (X-Axis)</option>
-                                    <option value="number">Number (Y-Axis)</option>
-                                    <option value="string">Text / Series</option>
-                                    <option value="category">Category</option>
-                                    <option value="ignore">Ignore</option>
+                                    <option value="date">日付・時間 (X軸)</option>
+                                    <option value="number">数値 (Y軸)</option>
+                                    <option value="string">テキスト / 波形の分類</option>
+                                    <option value="category">カテゴリー</option>
+                                    <option value="ignore">除外 (グラフに使わない)</option>
                                 </select>
                             </div>
 
                             {col.type !== 'ignore' && (
                                 <>
                                     <div className={styles.formGroup}>
-                                        <label className={styles.label}>Display Name</label>
+                                        <label className={styles.label}>表示名 (Display Name)</label>
                                         <input
                                             className={styles.input}
                                             value={col.mappedName}
@@ -85,7 +85,7 @@ export const ColumnMappingPage = ({ data, onBack, onNext }: ColumnMappingPagePro
 
                                     {(col.type === 'number') && (
                                         <div className={styles.formGroup}>
-                                            <label className={styles.label}>Unit</label>
+                                            <label className={styles.label}>単位 (Unit)</label>
                                             <input
                                                 list={`unit-presets-${originalIdx}`}
                                                 className={styles.input}
@@ -111,7 +111,7 @@ export const ColumnMappingPage = ({ data, onBack, onNext }: ColumnMappingPagePro
                             )}
 
                             <div className={styles.previewData}>
-                                <strong>Sample: </strong>
+                                <strong>サンプル: </strong>
                                 <span className={styles.previewItem}>
                                     {String(data.data[0]?.[col.originalName] ?? '')}
                                 </span>
@@ -123,10 +123,10 @@ export const ColumnMappingPage = ({ data, onBack, onNext }: ColumnMappingPagePro
 
             <div className={styles.actions}>
                 <Button variant="outline" onClick={onBack}>
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                    <ArrowLeft className="mr-2 h-4 w-4" /> 戻る
                 </Button>
                 <Button onClick={() => onNext(mappings.filter(m => m != null))}>
-                    Next Step <ArrowRight className="ml-2 h-4 w-4" />
+                    次へ進む <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
             </div>
         </div>

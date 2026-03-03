@@ -30,7 +30,7 @@ export const DataImport = ({ onDataLoaded }: DataImportProps) => {
                 onDataLoaded(result);
             }
         } catch (err) {
-            setError("Failed to process file.");
+            setError("ファイルの処理に失敗しました。");
             console.error(err);
         } finally {
             setIsLoading(false);
@@ -43,7 +43,7 @@ export const DataImport = ({ onDataLoaded }: DataImportProps) => {
             setTextInput(text);
             setError(null);
         } catch (err) {
-            setError("Failed to read from clipboard directly. Please use Ctrl+V / Cmd+V.");
+            setError("クリップボードからの直接読みとりに失敗しました。ショートカット（Ctrl+V または Cmd+V）を使用してください。");
             console.error(err);
         }
     };
@@ -60,7 +60,7 @@ export const DataImport = ({ onDataLoaded }: DataImportProps) => {
             if (result.error) {
                 setError(result.error);
             } else if (result.data.length === 0) {
-                setError("No structured data found in text input.");
+                setError("入力されたテキストから構造化されたデータが見つかりませんでした。");
             } else {
                 onDataLoaded({
                     ...result,
@@ -75,7 +75,7 @@ export const DataImport = ({ onDataLoaded }: DataImportProps) => {
         <div className={styles.container}>
             {/* File Upload Section */}
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold">1. Import Data</h2>
+                <h2 className="text-xl font-bold">1. データの取り込み</h2>
                 <a
                     href="https://docs.google.com/spreadsheets/d/1YPyuljT5Osr11mhLOFxbRgHJQxzY64EJ/export?format=csv"
                     className="flex items-center gap-1 text-sm text-[hsl(var(--primary))] hover:underline"
@@ -83,7 +83,7 @@ export const DataImport = ({ onDataLoaded }: DataImportProps) => {
                     rel="noopener noreferrer"
                 >
                     <Download size={14} />
-                    Download Sample CSV
+                    サンプルCSVのダウンロード
                 </a>
             </div>
 
@@ -92,30 +92,30 @@ export const DataImport = ({ onDataLoaded }: DataImportProps) => {
                     <Dropzone
                         onFilesAccepted={(files) => handleFileDrop(files as File[])}
                         accept={['.xlsx', '.csv', '.tsv', '.txt']}
-                        label="Select Excel or CSV file"
-                        subLabel="Drag and drop or click to upload"
+                        label="Excel または CSVファイルを選択"
+                        subLabel="クリック、またはファイルをここにドラッグ＆ドロップしてください"
                     />
-                    {isLoading && <p className="mt-4 text-center text-sm text-[hsl(var(--muted-foreground))] flex items-center justify-center gap-2"><Loader2 className="animate-spin h-4 w-4" /> Processing...</p>}
+                    {isLoading && <p className="mt-4 text-center text-sm text-[hsl(var(--muted-foreground))] flex items-center justify-center gap-2"><Loader2 className="animate-spin h-4 w-4" /> 処理中...</p>}
                     {error && <p className={styles.error}>{error}</p>}
                 </CardContent>
             </Card>
 
             <div className={styles.divider}>
-                <span>OR</span>
+                <span>または</span>
             </div>
 
             {/* Text / Clipboard Section */}
             <Card>
                 <CardHeader>
                     <h3 className="text-lg font-semibold flex items-center gap-2">
-                        Paste Data
+                        テキストを直接貼り付け
                     </h3>
                 </CardHeader>
                 <CardContent>
                     <div className="relative">
                         <textarea
                             className={styles.textarea}
-                            placeholder="Paste Excel data, CSV, or free text (e.g. 'WBC 12.3 (2026-02-01)')"
+                            placeholder="Excelのデータ、CSV、またはフリーテキストを貼り付けてください (例: 'WBC 12.3 (2026-02-01)')"
                             value={textInput}
                             onChange={(e) => setTextInput(e.target.value)}
                         />
@@ -124,10 +124,10 @@ export const DataImport = ({ onDataLoaded }: DataImportProps) => {
                             size="sm"
                             className="absolute top-2 right-2 text-xs bg-white/80 backdrop-blur-sm shadow-sm border border-gray-200"
                             onClick={handlePaste}
-                            title="Paste from Clipboard"
+                            title="クリップボードから貼り付け"
                             type="button"
                         >
-                            <Clipboard size={14} className="mr-1" /> Paste
+                            <Clipboard size={14} className="mr-1" /> 貼り付け (Paste)
                         </Button>
                     </div>
 
@@ -136,7 +136,7 @@ export const DataImport = ({ onDataLoaded }: DataImportProps) => {
                             onClick={handleTextSubmit}
                             disabled={!textInput.trim() || isLoading}
                         >
-                            Process Text <ArrowRight size={16} className="ml-2" />
+                            テキストを処理して進む <ArrowRight size={16} className="ml-2" />
                         </Button>
                     </div>
                 </CardContent>

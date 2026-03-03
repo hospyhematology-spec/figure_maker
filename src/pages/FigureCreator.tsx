@@ -177,13 +177,13 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                         <Button variant="ghost" size="sm" onClick={onBack} className="p-1">
                             <ArrowLeft size={16} />
                         </Button>
-                        <h3>Configuration</h3>
+                        <h3>グラフ設定 (Configuration)</h3>
                     </div>
                 </div>
 
                 <div className={styles.sidebarContent}>
                     <div className={styles.controlGroup}>
-                        <div className={styles.groupTitle}>Series Settings</div>
+                        <div className={styles.groupTitle}>波形と系列の設定 (Series Settings)</div>
                         {config.series.map(series => (
                             <div key={series.id} className={styles.seriesItem}>
                                 <div className={styles.colorPicker} style={{ backgroundColor: series.color }}>
@@ -191,7 +191,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                         type="color"
                                         value={series.color}
                                         onChange={(e) => handleSeriesUpdate(series.id, 'color', e.target.value)}
-                                        title="Change Color"
+                                        title="色を変更"
                                     />
                                 </div>
                                 <span className={styles.seriesName} title={series.name}>{series.name}</span>
@@ -200,19 +200,19 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                     className={styles.axisSelect}
                                     value={series.yAxisId}
                                     onChange={(e) => handleSeriesUpdate(series.id, 'yAxisId', e.target.value)}
-                                    title="Axis Assignment"
+                                    title="軸の割り当て (Axis Assignment)"
                                 >
-                                    <optgroup label="Left Axes">
-                                        <option value="left-1">Left 1</option>
-                                        <option value="left-2">Left 2</option>
-                                        <option value="left-3">Left 3</option>
-                                        <option value="left-4">Left 4</option>
+                                    <optgroup label="左側の軸 (Left Axes)">
+                                        <option value="left-1">左側 1 (Left 1)</option>
+                                        <option value="left-2">左側 2 (Left 2)</option>
+                                        <option value="left-3">左側 3 (Left 3)</option>
+                                        <option value="left-4">左側 4 (Left 4)</option>
                                     </optgroup>
-                                    <optgroup label="Right Axes">
-                                        <option value="right-1">Right 1</option>
-                                        <option value="right-2">Right 2</option>
-                                        <option value="right-3">Right 3</option>
-                                        <option value="right-4">Right 4</option>
+                                    <optgroup label="右側の軸 (Right Axes)">
+                                        <option value="right-1">右側 1 (Right 1)</option>
+                                        <option value="right-2">右側 2 (Right 2)</option>
+                                        <option value="right-3">右側 3 (Right 3)</option>
+                                        <option value="right-4">右側 4 (Right 4)</option>
                                     </optgroup>
                                 </select>
 
@@ -220,23 +220,23 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                     className={styles.axisSelect}
                                     value={series.lineStyle || 'solid'}
                                     onChange={(e) => handleSeriesUpdate(series.id, 'lineStyle', e.target.value)}
-                                    title="Line Style"
+                                    title="線のスタイル (Line Style)"
                                 >
-                                    <option value="solid">Solid</option>
-                                    <option value="dashed">Dashed</option>
+                                    <option value="solid">実線 (Solid)</option>
+                                    <option value="dashed">破線 (Dashed)</option>
                                 </select>
                             </div>
                         ))}
                     </div>
 
                     <div className={styles.controlGroup}>
-                        <div className={styles.groupTitle}>Chart Layout</div>
+                        <div className={styles.groupTitle}>グラフのレイアウト (Chart Layout)</div>
                         <div className="flex flex-col gap-2 p-2 bg-[hsl(var(--bg-secondary))] rounded border border-[hsl(var(--border-color))]">
                             <label className="text-sm font-bold text-[hsl(var(--text-primary))]">
-                                GRAPH WIDTH
+                                横幅 (GRAPH WIDTH)
                             </label>
                             <div className="flex flex-col gap-1">
-                                <label className="text-xs text-[hsl(var(--text-secondary))]">Width (px or 'auto')</label>
+                                <label className="text-xs text-[hsl(var(--text-secondary))]">幅 (ピクセル指定 または 'auto')</label>
                                 <input
                                     type="text"
                                     className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
@@ -265,7 +265,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                     placeholder="auto (e.g. 1000)"
                                 />
                                 <span className="text-[10px] text-[hsl(var(--text-secondary))]">
-                                    Leave blank or 'auto' for dynamic expansion. Enter a number to fix width.
+                                    画面に合わせる場合は空欄または'auto'。ピクセルで固定する場合は数値を入力してください。
                                 </span>
                             </div>
 
@@ -277,24 +277,24 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                     className="rounded border-[hsl(var(--border-color))]"
                                     disabled={config.chartWidth === 'auto' || (config.chartWidth as any) === ''}
                                 />
-                                <span className="text-sm text-[hsl(var(--text-primary))]">Fit to Screen (Shrink)</span>
+                                <span className="text-sm text-[hsl(var(--text-primary))]">画面サイズに合わせて全体を縮小表示 (Fit to Screen)</span>
                             </label>
                             {(config.chartWidth === 'auto' || (config.chartWidth as any) === '') && (
                                 <span className="text-[10px] text-amber-600 mt-[-4px]">
-                                    * Only available when a specific width is set.
+                                    * 固定の横幅（数値）が設定されている場合のみ有効です。
                                 </span>
                             )}
                         </div>
                     </div>
 
                     <div className={styles.controlGroup}>
-                        <div className={styles.groupTitle}>X-Axis Settings</div>
+                        <div className={styles.groupTitle}>横軸の設定 (X-Axis Settings)</div>
                         <div className="flex flex-col gap-2 p-2 bg-[hsl(var(--bg-secondary))] rounded border border-[hsl(var(--border-color))]">
                             <label className="text-sm font-bold text-[hsl(var(--text-primary))]">
-                                X-AXIS (DATE)
+                                横軸の日付表記 (X-AXIS DATE)
                             </label>
                             <div className="flex flex-col gap-1">
-                                <label className="text-xs text-[hsl(var(--text-secondary))]">Display Format</label>
+                                <label className="text-xs text-[hsl(var(--text-secondary))]">表示形式 (Display Format)</label>
                                 <select
                                     className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
                                     value={config.xAxis.tickFormat || 'date'}
@@ -303,16 +303,16 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                         xAxis: { ...prev.xAxis, tickFormat: e.target.value as 'date' | 'day0' | 'day1' }
                                     }))}
                                 >
-                                    <option value="date">Date (e.g. 12/31)</option>
-                                    <option value="day0">Day 0 Start (Day 0, Day 1...)</option>
-                                    <option value="day1">Day 1 Start (Day 1, Day 2...)</option>
+                                    <option value="date">元のカレンダー日付 (例: 12/31)</option>
+                                    <option value="day0">Day 0 基準 (Day 0, Day 1...)</option>
+                                    <option value="day1">Day 1 基準 (Day 1, Day 2...)</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
                     <div className={styles.controlGroup}>
-                        <div className={styles.groupTitle}>Axis Settings</div>
+                        <div className={styles.groupTitle}>縦軸の設定 (Y-Axis Settings)</div>
                         <div className="flex flex-col gap-4 max-h-80 overflow-y-auto pr-2">
                             {config.yAxes.map((axis) => {
                                 const isUsed = config.series.some(s => s.yAxisId === axis.id);
@@ -327,7 +327,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                         </label>
 
                                         <div className="flex flex-col gap-1">
-                                            <label className="text-xs text-[hsl(var(--text-secondary))]">Label</label>
+                                            <label className="text-xs text-[hsl(var(--text-secondary))]">見出し (Label)</label>
                                             <input
                                                 className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
                                                 value={axis.label || ''}
@@ -341,7 +341,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
 
                                         <div className="grid grid-cols-2 gap-2">
                                             <div className="flex flex-col gap-1">
-                                                <label className="text-xs text-[hsl(var(--text-secondary))]">Min</label>
+                                                <label className="text-xs text-[hsl(var(--text-secondary))]">最小値 (Min)</label>
                                                 <input
                                                     type="text"
                                                     className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
@@ -357,7 +357,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                                 />
                                             </div>
                                             <div className="flex flex-col gap-1">
-                                                <label className="text-xs text-[hsl(var(--text-secondary))]">Max</label>
+                                                <label className="text-xs text-[hsl(var(--text-secondary))]">最大値 (Max)</label>
                                                 <input
                                                     type="text"
                                                     className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
@@ -374,7 +374,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                             </div>
                                         </div>
                                         <div className="flex flex-col gap-1">
-                                            <label className="text-xs text-[hsl(var(--text-secondary))]">Increments (Number of Steps)</label>
+                                            <label className="text-xs text-[hsl(var(--text-secondary))]">目盛りの刻み数 (Increments)</label>
                                             <input
                                                 type="number"
                                                 className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
@@ -400,10 +400,10 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
 
                 <div className="p-4 border-t border-[hsl(var(--border-color))] flex flex-col gap-2 bg-[hsl(var(--bg-secondary))]">
                     <Button onClick={() => exportImage('png')} className="w-full">
-                        <Download className="mr-2 h-4 w-4" /> Download PNG
+                        <Download className="mr-2 h-4 w-4" /> PNG画像をダウンロード
                     </Button>
                     <Button variant="outline" onClick={() => exportImage('pdf')} className="w-full">
-                        <Download className="mr-2 h-4 w-4" /> Download PDF
+                        <Download className="mr-2 h-4 w-4" /> PDFをダウンロード
                     </Button>
                 </div>
             </aside>
@@ -437,8 +437,8 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                         </div>
                     ) : (
                         <div className="h-full flex flex-col items-center justify-center text-[hsl(var(--muted-foreground))]">
-                            <p className="text-lg">No data available to display.</p>
-                            <p className="text-sm">Please check your data mapping.</p>
+                            <p className="text-lg">表示するデータがありません。</p>
+                            <p className="text-sm">データの割り当て（ステップ2）をご確認ください。</p>
                         </div>
                     )}
                 </div>
