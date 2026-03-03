@@ -58,21 +58,6 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
     });
 
     const [isFitToScreen, setIsFitToScreen] = useState(false);
-    const [containerWidth, setContainerWidth] = useState<number>(0);
-    const chartContainerRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (!chartContainerRef.current) return;
-
-        const observer = new ResizeObserver((entries) => {
-            if (entries[0]) {
-                setContainerWidth(entries[0].contentRect.width);
-            }
-        });
-
-        observer.observe(chartContainerRef.current);
-        return () => observer.disconnect();
-    }, []);
 
     useEffect(() => {
         // Generate initial series config from mappings
@@ -116,12 +101,32 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
         // But html2canvas might capture current computed styles.
 
         try {
-            // Use scaling for better resolution
+            // Wait for any potential layout shifts to settle
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            // To prevent right-side cropping on scrolling charts:
+            // Temporarily store old overflow values and override them
+            const originalOverflow = chartRef.current.style.overflow;
+            const scrollWidth = chartRef.current.scrollWidth;
+            const scrollHeight = chartRef.current.scrollHeight;
+
+            chartRef.current.style.overflow = 'visible';
+
+            // Use scaling for better resolution, and force dimensions to encompass full scroll area
             const canvas = await html2canvas(chartRef.current, {
                 scale: 2,
                 backgroundColor: '#ffffff', // Force white bg in canvas
-                logging: false
+                logging: false,
+                width: scrollWidth,
+                height: scrollHeight,
+                windowWidth: scrollWidth,
+                windowHeight: scrollHeight,
+                x: 0,
+                y: 0
             });
+
+            // Restore original overflow style
+            chartRef.current.style.overflow = originalOverflow;
 
             if (format === 'png') {
                 const link = document.createElement('a');
@@ -405,24 +410,22 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
 
             <main className={styles.chartArea} ref={chartRef}>
                 <div
-                    ref={chartContainerRef}
                     className="flex-1 w-full h-full min-h-0 flex flex-col overflow-x-auto overflow-y-auto relative"
                 >
                     {dataPoints.length > 0 ? (
                         <div style={{
-                            // 手動指定(数値)ならその絶対幅、autoならデータ数に応じた動的計算を適用
-                            minWidth: (typeof config.chartWidth === 'number' && !isNaN(config.chartWidth))
-                                ? `${config.chartWidth}px`
-                                : `${Math.max(800, dataPoints.length * 30)}px`,
-                            width: (typeof config.chartWidth === 'number' && !isNaN(config.chartWidth))
-                                ? `${config.chartWidth}px`
-                                : '100%',
+                            // Fit to ScreenがONなら強制的に100%（画面幅に圧縮）、そうでないなら手動幅または自動計算幅を適用
+                            minWidth: isFitToScreen
+                                ? '100%'
+                                : (typeof config.chartWidth === 'number' && !isNaN(config.chartWidth))
+                                    ? `${config.chartWidth}px`
+                                    : `${Math.max(800, dataPoints.length * 30)}px`,
+                            width: isFitToScreen
+                                ? '100%'
+                                : (typeof config.chartWidth === 'number' && !isNaN(config.chartWidth))
+                                    ? `${config.chartWidth}px`
+                                    : '100%',
                             height: '100%',
-                            // Fit to Screen制御: 手動指定幅が親コンテナ幅より大きい場合のみ縮小
-                            transformOrigin: 'top left',
-                            transform: (isFitToScreen && typeof config.chartWidth === 'number' && containerWidth > 0 && config.chartWidth > containerWidth)
-                                ? `scale(${containerWidth / config.chartWidth})`
-                                : 'none',
                         }}>
                             <FigureChart
                                 data={dataPoints}
