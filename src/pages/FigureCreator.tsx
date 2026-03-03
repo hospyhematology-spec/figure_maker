@@ -374,10 +374,13 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                 <div className="flex-1 w-full h-full min-h-0 flex flex-col overflow-x-auto overflow-y-auto">
                     {dataPoints.length > 0 ? (
                         <div style={{
-                            // 手動指定(数値)ならその幅、autoならデータ数に応じた動的計算を適用
+                            // 手動指定(数値)ならその絶対幅、autoならデータ数に応じた動的計算を適用
                             minWidth: (typeof config.chartWidth === 'number' && !isNaN(config.chartWidth))
                                 ? `${config.chartWidth}px`
                                 : `${Math.max(800, dataPoints.length * 30)}px`,
+                            width: (typeof config.chartWidth === 'number' && !isNaN(config.chartWidth))
+                                ? `${config.chartWidth}px`
+                                : '100%',
                             height: '100%'
                         }}>
                             <FigureChart
