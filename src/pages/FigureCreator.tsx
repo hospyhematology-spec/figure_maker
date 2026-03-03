@@ -408,8 +408,9 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                 </div>
             </aside>
 
-            <main className={styles.chartArea} ref={chartRef}>
+            <main className={styles.chartArea}>
                 <div
+                    ref={chartRef}
                     className="flex-1 w-full h-full min-h-0 flex flex-col overflow-x-auto overflow-y-auto relative"
                 >
                     {dataPoints.length > 0 ? (
