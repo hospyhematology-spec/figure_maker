@@ -57,6 +57,23 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
         series: []
     });
 
+    const [isFitToScreen, setIsFitToScreen] = useState(false);
+    const [containerWidth, setContainerWidth] = useState<number>(0);
+    const chartContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!chartContainerRef.current) return;
+
+        const observer = new ResizeObserver((entries) => {
+            if (entries[0]) {
+                setContainerWidth(entries[0].contentRect.width);
+            }
+        });
+
+        observer.observe(chartContainerRef.current);
+        return () => observer.disconnect();
+    }, []);
+
     useEffect(() => {
         // Generate initial series config from mappings
         const newSeries: SeriesConfig[] = mappings
@@ -246,6 +263,22 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                     Leave blank or 'auto' for dynamic expansion. Enter a number to fix width.
                                 </span>
                             </div>
+
+                            <label className="flex items-center gap-2 mt-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={isFitToScreen}
+                                    onChange={(e) => setIsFitToScreen(e.target.checked)}
+                                    className="rounded border-[hsl(var(--border-color))]"
+                                    disabled={config.chartWidth === 'auto' || (config.chartWidth as any) === ''}
+                                />
+                                <span className="text-sm text-[hsl(var(--text-primary))]">Fit to Screen (Shrink)</span>
+                            </label>
+                            {(config.chartWidth === 'auto' || (config.chartWidth as any) === '') && (
+                                <span className="text-[10px] text-amber-600 mt-[-4px]">
+                                    * Only available when a specific width is set.
+                                </span>
+                            )}
                         </div>
                     </div>
 
@@ -371,7 +404,10 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
             </aside>
 
             <main className={styles.chartArea} ref={chartRef}>
-                <div className="flex-1 w-full h-full min-h-0 flex flex-col overflow-x-auto overflow-y-auto">
+                <div
+                    ref={chartContainerRef}
+                    className="flex-1 w-full h-full min-h-0 flex flex-col overflow-x-auto overflow-y-auto relative"
+                >
                     {dataPoints.length > 0 ? (
                         <div style={{
                             // 手動指定(数値)ならその絶対幅、autoならデータ数に応じた動的計算を適用
@@ -381,7 +417,12 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                             width: (typeof config.chartWidth === 'number' && !isNaN(config.chartWidth))
                                 ? `${config.chartWidth}px`
                                 : '100%',
-                            height: '100%'
+                            height: '100%',
+                            // Fit to Screen制御: 手動指定幅が親コンテナ幅より大きい場合のみ縮小
+                            transformOrigin: 'top left',
+                            transform: (isFitToScreen && typeof config.chartWidth === 'number' && containerWidth > 0 && config.chartWidth > containerWidth)
+                                ? `scale(${containerWidth / config.chartWidth})`
+                                : 'none',
                         }}>
                             <FigureChart
                                 data={dataPoints}
