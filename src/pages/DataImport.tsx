@@ -4,7 +4,7 @@ import type { ParseResult } from '../utils/dataParser';
 import { Dropzone } from '../components/ui/Dropzone';
 import { Button } from '../components/ui/Button';
 import { Card, CardHeader, CardContent } from '../components/ui/Card';
-import { Clipboard, ArrowRight, Loader2 } from 'lucide-react';
+import { Clipboard, ArrowRight, Loader2, Download } from 'lucide-react';
 import styles from './DataImport.module.css';
 
 interface DataImportProps {
@@ -74,7 +74,18 @@ export const DataImport = ({ onDataLoaded }: DataImportProps) => {
     return (
         <div className={styles.container}>
             {/* File Upload Section */}
-            <h2 className="text-xl font-bold mb-4">1. Import Data</h2>
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold">1. Import Data</h2>
+                <a
+                    href="https://docs.google.com/spreadsheets/d/1YPyuljT5Osr11mhLOFxbRgHJQxzY64EJ/export?format=csv"
+                    className="flex items-center gap-1 text-sm text-[hsl(var(--primary))] hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <Download size={14} />
+                    Download Sample CSV
+                </a>
+            </div>
 
             <Card className="mb-8">
                 <CardContent className="p-6">
