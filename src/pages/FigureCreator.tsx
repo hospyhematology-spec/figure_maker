@@ -336,7 +336,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                             </div>
                                         </div>
                                         <div className="flex flex-col gap-1">
-                                            <label className="text-xs text-[hsl(var(--text-secondary))]">Ticks (Count)</label>
+                                            <label className="text-xs text-[hsl(var(--text-secondary))]">Increments (Number of Steps)</label>
                                             <input
                                                 type="number"
                                                 className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"

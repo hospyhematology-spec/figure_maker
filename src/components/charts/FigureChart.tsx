@@ -102,6 +102,8 @@ export const FigureChart: React.FC<FigureChartProps> = ({
                             <YAxis
                                 key={axis.id}
                                 yAxisId={axis.id}
+                                type="number"
+                                allowDataOverflow={true}
                                 orientation={axis.position === 'right' ? 'right' : 'left'}
                                 domain={axis.min !== undefined || axis.max !== undefined ? [axis.min ?? 'auto', axis.max ?? 'auto'] : (axis.domain || ['auto', 'auto'])}
                                 tickCount={axis.tickCount}
