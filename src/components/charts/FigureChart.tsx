@@ -19,6 +19,7 @@ interface FigureChartProps {
     series: SeriesConfig[];
     height?: number;
     axisBounds?: Record<string, { min?: number; max?: number }>;
+    globalAxisColor?: 'black' | 'dark-gray' | 'gray';
 }
 
 export const FigureChart: React.FC<FigureChartProps> = ({
@@ -27,8 +28,15 @@ export const FigureChart: React.FC<FigureChartProps> = ({
     yAxes,
     series,
     height = 500,
-    axisBounds = {}
+    axisBounds = {},
+    globalAxisColor = 'gray'
 }) => {
+    const getAxisColor = () => {
+        if (globalAxisColor === 'black') return '#000000';
+        if (globalAxisColor === 'dark-gray') return '#555555';
+        if (globalAxisColor === 'gray') return '#999999';
+        return 'hsl(var(--text-secondary))';
+    };
     const formatXAxis = (tickItem: number | string) => {
         try {
             let dateVal: Date;
@@ -90,8 +98,8 @@ export const FigureChart: React.FC<FigureChartProps> = ({
                         tickFormatter={formatXAxis}
                         scale="time"
                         name={xAxis.label || 'Date'}
-                        stroke="hsl(var(--text-secondary))"
-                        tick={{ fill: 'hsl(var(--text-secondary))', fontSize: 12 }}
+                        stroke={getAxisColor()}
+                        tick={{ fill: getAxisColor(), fontSize: 12 }}
                     />
 
                     {activeYAxes.map((axis) => {
@@ -125,14 +133,14 @@ export const FigureChart: React.FC<FigureChartProps> = ({
                                 orientation={axis.position === 'right' ? 'right' : 'left'}
                                 domain={axis.min !== undefined || axis.max !== undefined ? [axis.min ?? 'auto', axis.max ?? 'auto'] : (axis.domain || ['auto', 'auto'])}
                                 ticks={customTicks}
-                                stroke="hsl(var(--text-secondary))"
-                                tick={{ fill: 'hsl(var(--text-secondary))', fontSize: 12 }}
+                                stroke={getAxisColor()}
+                                tick={{ fill: getAxisColor(), fontSize: 12 }}
                                 tickFormatter={(val) => val.toLocaleString()} // Add basic number formatting
                                 label={{
                                     value: axis.label,
                                     angle: -90,
                                     position: axis.position === 'right' ? 'insideRight' : 'insideLeft',
-                                    fill: 'hsl(var(--text-secondary))',
+                                    fill: getAxisColor(),
                                     style: { textAnchor: 'middle' },
                                     offset: 0
                                 }}
