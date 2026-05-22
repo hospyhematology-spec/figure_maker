@@ -34,7 +34,7 @@ export interface AxisConfig {
   unit?: string;
   min?: number | 'auto';
   max?: number | 'auto';
-  tickCount?: number;
+  tickInterval?: number;
   domain?: [number | 'auto', number | 'auto'];
   scale?: 'linear' | 'log' | 'time';
   reversed?: boolean;

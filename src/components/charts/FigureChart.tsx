@@ -18,6 +18,7 @@ interface FigureChartProps {
     yAxes: AxisConfig[];
     series: SeriesConfig[];
     height?: number;
+    axisBounds?: Record<string, { min?: number; max?: number }>;
 }
 
 export const FigureChart: React.FC<FigureChartProps> = ({
@@ -25,7 +26,8 @@ export const FigureChart: React.FC<FigureChartProps> = ({
     xAxis,
     yAxes,
     series,
-    height = 500
+    height = 500,
+    axisBounds = {}
 }) => {
     const formatXAxis = (tickItem: number | string) => {
         try {
@@ -94,9 +96,25 @@ export const FigureChart: React.FC<FigureChartProps> = ({
 
                     {activeYAxes.map((axis) => {
                         // For Recharts to not overlap, we need to manually place them or use orientation smartly
-                        // Recharts typically handles multiple YAxis natively if we give them different yAxisId 
-                        // and they stack outwards if we just render them. 
-                        // We will rely on Recharts' default layout for multiple axes on same side, but apply user domain.
+                        
+                        let customTicks = undefined;
+                        if (axis.tickInterval && axis.tickInterval > 0) {
+                            const bounds = axisBounds[axis.id] || {};
+                            const finalMin = axis.min !== 'auto' && axis.min !== undefined ? axis.min : bounds.min;
+                            const finalMax = axis.max !== 'auto' && axis.max !== undefined ? axis.max : bounds.max;
+                            
+                            if (finalMin !== undefined && finalMax !== undefined) {
+                                customTicks = [];
+                                // start at the first multiple of tickInterval >= finalMin
+                                let current = Math.ceil(finalMin / axis.tickInterval) * axis.tickInterval;
+                                // If they set exact min/max, they might want them included, but standard graphs just use multiples.
+                                // We'll just generate the multiples.
+                                while (current <= finalMax) {
+                                    customTicks.push(current);
+                                    current += axis.tickInterval;
+                                }
+                            }
+                        }
 
                         return (
                             <YAxis
@@ -106,7 +124,7 @@ export const FigureChart: React.FC<FigureChartProps> = ({
                                 allowDataOverflow={true}
                                 orientation={axis.position === 'right' ? 'right' : 'left'}
                                 domain={axis.min !== undefined || axis.max !== undefined ? [axis.min ?? 'auto', axis.max ?? 'auto'] : (axis.domain || ['auto', 'auto'])}
-                                tickCount={axis.tickCount}
+                                ticks={customTicks}
                                 stroke="hsl(var(--text-secondary))"
                                 tick={{ fill: 'hsl(var(--text-secondary))', fontSize: 12 }}
                                 tickFormatter={(val) => val.toLocaleString()} // Add basic number formatting

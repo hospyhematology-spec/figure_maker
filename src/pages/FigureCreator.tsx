@@ -389,19 +389,19 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                                     />
                                                 </div>
                                                 <div className="flex flex-col gap-1 col-span-2">
-                                                    <label className="text-[10px] font-bold text-[hsl(var(--text-secondary))]">目盛りの刻み (Increments)</label>
+                                                    <label className="text-[10px] font-bold text-[hsl(var(--text-secondary))]">目盛りの間隔 (Interval)</label>
                                                     <input
                                                         type="number"
                                                         className="p-1.5 border rounded text-xs bg-[hsl(var(--bg-primary))]"
-                                                        value={axis.tickCount || ''}
+                                                        value={axis.tickInterval || ''}
                                                         onChange={(e) => {
                                                             const val = e.target.value ? parseInt(e.target.value, 10) : undefined;
                                                             setConfig(prev => ({
                                                                 ...prev,
-                                                                yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, tickCount: val } : a)
+                                                                yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, tickInterval: val } : a)
                                                             }));
                                                         }}
-                                                        placeholder="auto (5)"
+                                                        placeholder="auto (e.g. 10)"
                                                         min="2"
                                                         max="100"
                                                     />
@@ -534,6 +534,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                 xAxis={config.xAxis}
                                 yAxes={config.yAxes}
                                 series={config.series}
+                                axisBounds={axisDataBounds}
                                 height={600}
                             />
                         </div>
