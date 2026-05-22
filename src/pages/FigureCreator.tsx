@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+﻿import { useState, useEffect, useMemo, useRef } from 'react';
 import { Download, ArrowLeft } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { FigureChart } from '../components/charts/FigureChart';
@@ -226,7 +226,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                         </div>
                         {config.series.map(series => (
                             <div key={series.id} className={`${styles.seriesItem} flex-col items-stretch gap-2`}>
-                                <div className="flex items-center gap-2 w-full">
+                                <div className="flex items-center gap-2 w-full flex-wrap">
                                     <div className={styles.colorPicker} style={{ backgroundColor: series.color }}>
                                         <input
                                             type="color"

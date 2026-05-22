@@ -1,4 +1,4 @@
-.container {
+﻿.container {
     display: flex;
     height: calc(100vh - 100px);
     /* Adjust based on header */
@@ -18,7 +18,7 @@
 }
 
 .sidebar {
-    width: 350px;
+    width: 420px;
     display: flex;
     flex-direction: column;
     background-color: hsl(var(--card));
