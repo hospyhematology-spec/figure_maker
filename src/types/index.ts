@@ -24,7 +24,7 @@ export interface SeriesConfig {
   marker?: 'circle' | 'square' | 'triangle' | 'diamond' | 'cross' | 'none';
   lineStyle?: 'solid' | 'dashed' | 'dotted';
   strokeWidth?: number;
-  yAxisId: 'left-1' | 'left-2' | 'left-3' | 'left-4' | 'right-1' | 'right-2' | 'right-3' | 'right-4' | 'left' | 'right'; // Support new 8 axes and legacy 2 axes
+  yAxisId: 'left-1' | 'left-2' | 'left-3' | 'left-4' | 'left-5' | 'right-1' | 'right-2' | 'right-3' | 'right-4' | 'right-5' | 'left' | 'right'; // Support new 8 axes and legacy 2 axes
 }
 
 export interface AxisConfig {
@@ -69,3 +69,4 @@ export interface ProjectState {
   processedData: DataPoint[];
   figureConfig: FigureConfig;
 }
+

@@ -49,10 +49,12 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
             { id: 'left-2', position: 'left', label: '', scale: 'linear' },
             { id: 'left-3', position: 'left', label: '', scale: 'linear' },
             { id: 'left-4', position: 'left', label: '', scale: 'linear' },
+            { id: 'left-5', position: 'left', label: '', scale: 'linear' },
             { id: 'right-1', position: 'right', label: '', scale: 'linear' },
             { id: 'right-2', position: 'right', label: '', scale: 'linear' },
             { id: 'right-3', position: 'right', label: '', scale: 'linear' },
-            { id: 'right-4', position: 'right', label: '', scale: 'linear' }
+            { id: 'right-4', position: 'right', label: '', scale: 'linear' },
+            { id: 'right-5', position: 'right', label: '', scale: 'linear' }
         ],
         series: []
     });
@@ -87,6 +89,39 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
         }));
     };
 
+    const addSeries = () => {
+        setConfig(prev => {
+            const newId = `series-${Date.now()}`;
+            // Find an unused color or default
+            const newColor = COLORS[prev.series.length % COLORS.length];
+            // Default mappings
+            const defaultMapping = mappings.find(m => m.type === 'number');
+            const dataKey = defaultMapping ? defaultMapping.mappedName : '';
+            return {
+                ...prev,
+                series: [
+                    ...prev.series,
+                    {
+                        id: newId,
+                        name: dataKey || 'New Series',
+                        dataKey: dataKey,
+                        color: newColor,
+                        type: 'line',
+                        yAxisId: 'left-1',
+                        lineStyle: 'solid'
+                    }
+                ]
+            };
+        });
+    };
+
+    const removeSeries = (id: string) => {
+        setConfig(prev => ({
+            ...prev,
+            series: prev.series.filter(s => s.id !== id)
+        }));
+    };
+
     const exportImage = async (format: 'png' | 'pdf') => {
         if (!chartRef.current) return;
 
@@ -114,7 +149,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
 
             // Use scaling for better resolution, and force dimensions to encompass full scroll area
             const canvas = await html2canvas(chartRef.current, {
-                scale: 2,
+                scale: 4,
                 backgroundColor: '#ffffff', // Force white bg in canvas
                 logging: false,
                 width: scrollWidth,
@@ -183,18 +218,45 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
 
                 <div className={styles.sidebarContent}>
                     <div className={styles.controlGroup}>
-                        <div className={styles.groupTitle}>波形と系列の設定 (Series Settings)</div>
+                        <div className="flex items-center justify-between mb-3">
+                            <div className={styles.groupTitle} style={{ margin: 0 }}>波形と系列の設定 (Series Settings)</div>
+                            <Button size="sm" variant="outline" onClick={addSeries} className="py-0.5 px-2 text-xs">
+                                + 系列追加
+                            </Button>
+                        </div>
                         {config.series.map(series => (
-                            <div key={series.id} className={styles.seriesItem}>
-                                <div className={styles.colorPicker} style={{ backgroundColor: series.color }}>
-                                    <input
-                                        type="color"
-                                        value={series.color}
-                                        onChange={(e) => handleSeriesUpdate(series.id, 'color', e.target.value)}
-                                        title="色を変更"
-                                    />
-                                </div>
-                                <span className={styles.seriesName} title={series.name}>{series.name}</span>
+                            <div key={series.id} className={`${styles.seriesItem} flex-col items-stretch gap-2`}>
+                                <div className="flex items-center gap-2 w-full">
+                                    <div className={styles.colorPicker} style={{ backgroundColor: series.color }}>
+                                        <input
+                                            type="color"
+                                            value={series.color}
+                                            onChange={(e) => handleSeriesUpdate(series.id, 'color', e.target.value)}
+                                            title="色を変更"
+                                        />
+                                    </div>
+                                    <select
+                                        className={styles.axisSelect}
+                                        value={series.dataKey}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            setConfig(prev => ({
+                                                ...prev,
+                                                series: prev.series.map(s => s.id === series.id ? { ...s, dataKey: val, name: val } : s)
+                                            }));
+                                        }}
+                                        title="プロットする項目を選択"
+                                        style={{ flex: 1, minWidth: '95px' }}
+                                    >
+                                        {mappings
+                                            .filter(m => m.type === "number")
+                                            .map(m => (
+                                                <option key={m.mappedName} value={m.mappedName}>
+                                                    {m.mappedName}
+                                                </option>
+                                            ))
+                                        }
+                                    </select>
 
                                 <select
                                     className={styles.axisSelect}
@@ -207,12 +269,14 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                         <option value="left-2">左側 2 (Left 2)</option>
                                         <option value="left-3">左側 3 (Left 3)</option>
                                         <option value="left-4">左側 4 (Left 4)</option>
+                                        <option value="left-5">左側 5 (Left 5)</option>
                                     </optgroup>
                                     <optgroup label="右側の軸 (Right Axes)">
                                         <option value="right-1">右側 1 (Right 1)</option>
                                         <option value="right-2">右側 2 (Right 2)</option>
                                         <option value="right-3">右側 3 (Right 3)</option>
                                         <option value="right-4">右側 4 (Right 4)</option>
+                                        <option value="right-5">右側 5 (Right 5)</option>
                                     </optgroup>
                                 </select>
 
@@ -225,6 +289,97 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                     <option value="solid">実線 (Solid)</option>
                                     <option value="dashed">破線 (Dashed)</option>
                                 </select>
+
+                                {config.series.length > 1 && (
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => removeSeries(series.id)}
+                                        className="p-1 text-red-500 hover:text-red-700 font-bold"
+                                        style={{ fontSize: "1.25rem", lineHeight: 1 }}
+                                        title="系列削除"
+                                    >
+                                        &times;
+                                    </Button>
+                                )}
+                                </div>
+                                {(() => {
+                                    const axis = config.yAxes.find(a => a.id === series.yAxisId);
+                                    if (!axis) return null;
+                                    return (
+                                        <div className="flex flex-col gap-2 p-2 bg-[hsl(var(--bg-secondary))] rounded border border-[hsl(var(--border-color))] mt-1">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs font-semibold text-[hsl(var(--text-primary))]">
+                                                    Y軸設定 ({axis.id.replace('-', ' ').toUpperCase()})
+                                                </span>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div className="flex flex-col gap-1 col-span-2">
+                                                    <label className="text-[10px] font-bold text-[hsl(var(--text-secondary))]">見出し (Label)</label>
+                                                    <input
+                                                        className="p-1.5 border rounded text-xs bg-[hsl(var(--bg-primary))]"
+                                                        value={axis.label || ''}
+                                                        onChange={(e) => setConfig(prev => ({
+                                                            ...prev,
+                                                            yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, label: e.target.value } : a)
+                                                        }))}
+                                                        placeholder="e.g. mg/dL"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col gap-1">
+                                                    <label className="text-[10px] font-bold text-[hsl(var(--text-secondary))]">最小値 (Min)</label>
+                                                    <input
+                                                        type="text"
+                                                        className="p-1.5 border rounded text-xs bg-[hsl(var(--bg-primary))]"
+                                                        value={axis.min !== undefined ? axis.min : 'auto'}
+                                                        onChange={(e) => {
+                                                            const val = e.target.value === 'auto' || e.target.value === '' ? 'auto' : Number(e.target.value);
+                                                            setConfig(prev => ({
+                                                                ...prev,
+                                                                yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, min: Number.isNaN(val as number) && val !== 'auto' ? 'auto' : val } : a)
+                                                            }));
+                                                        }}
+                                                        placeholder="auto"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col gap-1">
+                                                    <label className="text-[10px] font-bold text-[hsl(var(--text-secondary))]">最大値 (Max)</label>
+                                                    <input
+                                                        type="text"
+                                                        className="p-1.5 border rounded text-xs bg-[hsl(var(--bg-primary))]"
+                                                        value={axis.max !== undefined ? axis.max : 'auto'}
+                                                        onChange={(e) => {
+                                                            const val = e.target.value === 'auto' || e.target.value === '' ? 'auto' : Number(e.target.value);
+                                                            setConfig(prev => ({
+                                                                ...prev,
+                                                                yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, max: Number.isNaN(val as number) && val !== 'auto' ? 'auto' : val } : a)
+                                                            }));
+                                                        }}
+                                                        placeholder="auto"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col gap-1 col-span-2">
+                                                    <label className="text-[10px] font-bold text-[hsl(var(--text-secondary))]">目盛りの刻み (Increments)</label>
+                                                    <input
+                                                        type="number"
+                                                        className="p-1.5 border rounded text-xs bg-[hsl(var(--bg-primary))]"
+                                                        value={axis.tickCount || ''}
+                                                        onChange={(e) => {
+                                                            const val = e.target.value ? parseInt(e.target.value, 10) : undefined;
+                                                            setConfig(prev => ({
+                                                                ...prev,
+                                                                yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, tickCount: val } : a)
+                                                            }));
+                                                        }}
+                                                        placeholder="auto"
+                                                        min="2"
+                                                        max="100"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
                             </div>
                         ))}
                     </div>
@@ -311,91 +466,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                         </div>
                     </div>
 
-                    <div className={styles.controlGroup}>
-                        <div className={styles.groupTitle}>縦軸の設定 (Y-Axis Settings)</div>
-                        <div className="flex flex-col gap-4 max-h-80 overflow-y-auto pr-2">
-                            {config.yAxes.map((axis) => {
-                                const isUsed = config.series.some(s => s.yAxisId === axis.id);
-                                const isPrimary = axis.id === 'left-1' || axis.id === 'right-1';
 
-                                if (!isUsed && !isPrimary) return null;
-
-                                return (
-                                    <div key={`setting-${axis.id}`} className="flex flex-col gap-2 p-2 bg-[hsl(var(--bg-secondary))] rounded border border-[hsl(var(--border-color))]">
-                                        <label className="text-sm font-bold text-[hsl(var(--text-primary))]">
-                                            {axis.id.replace('-', ' ').toUpperCase()}
-                                        </label>
-
-                                        <div className="flex flex-col gap-1">
-                                            <label className="text-xs text-[hsl(var(--text-secondary))]">見出し (Label)</label>
-                                            <input
-                                                className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
-                                                value={axis.label || ''}
-                                                onChange={(e) => setConfig(prev => ({
-                                                    ...prev,
-                                                    yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, label: e.target.value } : a)
-                                                }))}
-                                                placeholder="e.g. mg/dL"
-                                            />
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <div className="flex flex-col gap-1">
-                                                <label className="text-xs text-[hsl(var(--text-secondary))]">最小値 (Min)</label>
-                                                <input
-                                                    type="text"
-                                                    className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
-                                                    value={axis.min !== undefined ? axis.min : 'auto'}
-                                                    onChange={(e) => {
-                                                        const val = e.target.value === 'auto' || e.target.value === '' ? 'auto' : Number(e.target.value);
-                                                        setConfig(prev => ({
-                                                            ...prev,
-                                                            yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, min: isNaN(val as number) && val !== 'auto' ? 'auto' : val } : a)
-                                                        }));
-                                                    }}
-                                                    placeholder="auto"
-                                                />
-                                            </div>
-                                            <div className="flex flex-col gap-1">
-                                                <label className="text-xs text-[hsl(var(--text-secondary))]">最大値 (Max)</label>
-                                                <input
-                                                    type="text"
-                                                    className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
-                                                    value={axis.max !== undefined ? axis.max : 'auto'}
-                                                    onChange={(e) => {
-                                                        const val = e.target.value === 'auto' || e.target.value === '' ? 'auto' : Number(e.target.value);
-                                                        setConfig(prev => ({
-                                                            ...prev,
-                                                            yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, max: isNaN(val as number) && val !== 'auto' ? 'auto' : val } : a)
-                                                        }));
-                                                    }}
-                                                    placeholder="auto"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col gap-1">
-                                            <label className="text-xs text-[hsl(var(--text-secondary))]">目盛りの刻み数 (Increments)</label>
-                                            <input
-                                                type="number"
-                                                className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
-                                                value={axis.tickCount || ''}
-                                                onChange={(e) => {
-                                                    const val = e.target.value ? parseInt(e.target.value, 10) : undefined;
-                                                    setConfig(prev => ({
-                                                        ...prev,
-                                                        yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, tickCount: val } : a)
-                                                    }));
-                                                }}
-                                                placeholder="auto (e.g. 5)"
-                                                min="2"
-                                                max="100"
-                                            />
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
                 </div>
 
                 <div className="p-4 border-t border-[hsl(var(--border-color))] flex flex-col gap-2 bg-[hsl(var(--bg-secondary))]">
