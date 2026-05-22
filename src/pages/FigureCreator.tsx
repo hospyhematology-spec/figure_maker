@@ -256,27 +256,14 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                         {config.series.map(series => (
                             <div key={series.id} className={`${styles.seriesItem} flex-col items-stretch gap-2`}>
                                 <div className="flex items-center gap-2 w-full flex-wrap">
-                                    <select
-                                          className={styles.axisSelect}
-                                          value={series.color}
-                                          onChange={(e) => handleSeriesUpdate(series.id, 'color', e.target.value)}
-                                          style={{ borderLeft: `4px solid ${series.color}` }}
-                                      >
-                                          <option value="#000000">真っ黒 (Black)</option>
-                                          <option value="#555555">少し濃い黒 (Dark Gray)</option>
-                                          <option value="#999999">グレー (Gray)</option>
-                                          <option value="#8884d8">ブルー (Blue)</option>
-                                          <option value="#82ca9d">グリーン (Green)</option>
-                                          <option value="#ffc658">イエロー (Yellow)</option>
-                                          <option value="#ff7300">オレンジ (Orange)</option>
-                                          <option value="#0088FE">ライトブルー (Light Blue)</option>
-                                          <option value="#00C49F">エメラルド (Emerald)</option>
-                                          <option value="#FFBB28">ゴールド (Gold)</option>
-                                          <option value="#FF8042">コーラル (Coral)</option>
-                                          {!['#000000', '#555555', '#999999', '#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#0088FE', '#00C49F', '#FFBB28', '#FF8042'].includes(series.color) && (
-                                              <option value={series.color}>カスタム色</option>
-                                          )}
-                                      </select>
+                                    <div className={styles.colorPicker} style={{ backgroundColor: series.color }}>
+                                        <input
+                                            type="color"
+                                            value={series.color}
+                                            onChange={(e) => handleSeriesUpdate(series.id, 'color', e.target.value)}
+                                            title="色を変更"
+                                        />
+                                    </div>
                                     <select
                                         className={styles.axisSelect}
                                         value={series.dataKey}
