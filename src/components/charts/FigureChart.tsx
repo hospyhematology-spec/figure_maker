@@ -64,6 +64,14 @@ export const FigureChart: React.FC<FigureChartProps> = ({
     };
 
     // 使用されているYAxisのみを抽出（あるいはleft-1のみ常に表示）
+
+    const getAxisColor = (colorCode?: string) => {
+        if (colorCode === 'black') return '#000000';
+        if (colorCode === 'dark-gray') return '#555555';
+        if (colorCode === 'gray') return '#999999';
+        return 'hsl(var(--text-secondary))';
+    };
+
     const activeYAxes = yAxes.filter(axis =>
         series.some(s => s.yAxisId === axis.id) || axis.id === 'left-1'
     );
@@ -90,8 +98,8 @@ export const FigureChart: React.FC<FigureChartProps> = ({
                         tickFormatter={formatXAxis}
                         scale="time"
                         name={xAxis.label || 'Date'}
-                        stroke="hsl(var(--text-secondary))"
-                        tick={{ fill: 'hsl(var(--text-secondary))', fontSize: 12 }}
+                        stroke={getAxisColor(xAxis.axisColor)}
+                        tick={{ fill: getAxisColor(xAxis.axisColor), fontSize: 12 }}
                     />
 
                     {activeYAxes.map((axis) => {
@@ -125,14 +133,14 @@ export const FigureChart: React.FC<FigureChartProps> = ({
                                 orientation={axis.position === 'right' ? 'right' : 'left'}
                                 domain={axis.min !== undefined || axis.max !== undefined ? [axis.min ?? 'auto', axis.max ?? 'auto'] : (axis.domain || ['auto', 'auto'])}
                                 ticks={customTicks}
-                                stroke="hsl(var(--text-secondary))"
-                                tick={{ fill: 'hsl(var(--text-secondary))', fontSize: 12 }}
+                                stroke={getAxisColor(axis.axisColor)}
+                                tick={{ fill: getAxisColor(axis.axisColor), fontSize: 12 }}
                                 tickFormatter={(val) => val.toLocaleString()} // Add basic number formatting
                                 label={{
                                     value: axis.label,
                                     angle: -90,
                                     position: axis.position === 'right' ? 'insideRight' : 'insideLeft',
-                                    fill: 'hsl(var(--text-secondary))',
+                                    fill: getAxisColor(axis.axisColor),
                                     style: { textAnchor: 'middle' },
                                     offset: 0
                                 }}

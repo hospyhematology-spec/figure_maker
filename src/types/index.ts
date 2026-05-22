@@ -35,6 +35,7 @@ export interface AxisConfig {
   min?: number | 'auto';
   max?: number | 'auto';
   tickInterval?: number;
+    axisColor?: 'black' | 'dark-gray' | 'gray';
   domain?: [number | 'auto', number | 'auto'];
   scale?: 'linear' | 'log' | 'time';
   reversed?: boolean;
