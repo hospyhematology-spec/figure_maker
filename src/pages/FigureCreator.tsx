@@ -557,6 +557,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                 yAxes={config.yAxes}
                                 series={config.series}
                                 axisBounds={axisDataBounds}
+                                  globalAxisColor={config.globalAxisColor}
                                 height={600}
                             />
                         </div>
