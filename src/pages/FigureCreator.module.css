@@ -18,7 +18,9 @@
 }
 
 .sidebar {
-    width: 420px;
+    flex-shrink: 0;
+    min-width: 450px;
+    width: 450px;
     display: flex;
     flex-direction: column;
     background-color: hsl(var(--card));
