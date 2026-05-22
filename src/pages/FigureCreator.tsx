@@ -82,6 +82,35 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
         }
     }, [mappings]);
 
+    const axisDataBounds = useMemo(() => {
+        const bounds: Record<string, { min?: number; max?: number }> = {};
+        config.yAxes.forEach(axis => {
+            const assignedSeries = config.series.filter(s => s.yAxisId === axis.id);
+            if (assignedSeries.length === 0) return;
+
+            let minVal = Infinity;
+            let maxVal = -Infinity;
+
+            dataPoints.forEach(point => {
+                assignedSeries.forEach(s => {
+                    const val = point[s.dataKey];
+                    if (typeof val === 'number') {
+                        if (val < minVal) minVal = val;
+                        if (val > maxVal) maxVal = val;
+                    }
+                });
+            });
+
+            if (minVal !== Infinity && maxVal !== -Infinity) {
+                bounds[axis.id] = { 
+                    min: Number(minVal.toFixed(2)), 
+                    max: Number(maxVal.toFixed(2)) 
+                };
+            }
+        });
+        return bounds;
+    }, [dataPoints, config.series, config.yAxes]);
+
     const handleSeriesUpdate = (id: string, field: keyof SeriesConfig, value: any) => {
         setConfig(prev => ({
             ...prev,
@@ -306,6 +335,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                 {(() => {
                                     const axis = config.yAxes.find(a => a.id === series.yAxisId);
                                     if (!axis) return null;
+                                    const bounds = axisDataBounds[axis.id];
                                     return (
                                         <div className="flex flex-col gap-2 p-2 bg-[hsl(var(--bg-secondary))] rounded border border-[hsl(var(--border-color))] mt-1">
                                             <div className="flex items-center justify-between">
@@ -339,7 +369,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                                                 yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, min: Number.isNaN(val as number) && val !== 'auto' ? 'auto' : val } : a)
                                                             }));
                                                         }}
-                                                        placeholder="auto"
+                                                        placeholder={bounds?.min !== undefined ? `auto (${bounds.min})` : "auto"}
                                                     />
                                                 </div>
                                                 <div className="flex flex-col gap-1">
@@ -355,7 +385,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                                                 yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, max: Number.isNaN(val as number) && val !== 'auto' ? 'auto' : val } : a)
                                                             }));
                                                         }}
-                                                        placeholder="auto"
+                                                        placeholder={bounds?.max !== undefined ? `auto (${bounds.max})` : "auto"}
                                                     />
                                                 </div>
                                                 <div className="flex flex-col gap-1 col-span-2">
@@ -371,7 +401,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                                                 yAxes: prev.yAxes.map(a => a.id === axis.id ? { ...a, tickCount: val } : a)
                                                             }));
                                                         }}
-                                                        placeholder="auto"
+                                                        placeholder="auto (5)"
                                                         min="2"
                                                         max="100"
                                                     />
