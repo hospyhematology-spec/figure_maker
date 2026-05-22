@@ -1,4 +1,4 @@
-export type ColumnType = 'date' | 'number' | 'string' | 'category' | 'ignore';
+﻿export type ColumnType = 'date' | 'number' | 'string' | 'category' | 'ignore';
 
 export interface ColumnMapping {
   originalName: string;
@@ -42,6 +42,7 @@ export interface AxisConfig {
 }
 
 export interface FigureConfig {
+    globalAxisColor?: 'black' | 'dark-gray' | 'gray';
   title?: string;
   width: number;
   height: number;

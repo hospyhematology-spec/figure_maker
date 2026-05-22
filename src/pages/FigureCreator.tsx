@@ -412,7 +412,29 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                 })()}
                             </div>
                         ))}
+                    </div>                    <div className={styles.controlGroup}>
+                        <div className={styles.groupTitle}>全軸の共通設定 (Global Axis Settings)</div>
+                        <div className="flex flex-col gap-2 p-2 bg-[hsl(var(--bg-secondary))] rounded border border-[hsl(var(--border-color))]">
+                            <label className="text-sm font-bold text-[hsl(var(--text-primary))]">
+                                軸・目盛りの色 (ALL AXIS COLORS)
+                            </label>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    className={`flex-1 py-2 text-xs font-bold rounded border ${config.globalAxisColor === 'black' ? 'bg-[#000000] text-white border-black' : 'bg-white text-black border-gray-300'}`}
+                                    onClick={() => setConfig(prev => ({ ...prev, globalAxisColor: 'black' }))}
+                                >真っ黒</button>
+                                <button
+                                    className={`flex-1 py-2 text-xs font-bold rounded border ${config.globalAxisColor === 'dark-gray' ? 'bg-[#555555] text-white border-[#555555]' : 'bg-white text-black border-gray-300'}`}
+                                    onClick={() => setConfig(prev => ({ ...prev, globalAxisColor: 'dark-gray' }))}
+                                >少し濃い黒</button>
+                                <button
+                                    className={`flex-1 py-2 text-xs font-bold rounded border ${config.globalAxisColor === 'gray' || !config.globalAxisColor ? 'bg-[#999999] text-white border-[#999999]' : 'bg-white text-black border-gray-300'}`}
+                                    onClick={() => setConfig(prev => ({ ...prev, globalAxisColor: 'gray' }))}
+                                >グレー</button>
+                            </div>
+                        </div>
                     </div>
+
 
                     <div className={styles.controlGroup}>
                         <div className={styles.groupTitle}>グラフのレイアウト (Chart Layout)</div>
