@@ -361,7 +361,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                                     <input
                                                         type="text"
                                                         className="p-1.5 border rounded text-xs bg-[hsl(var(--bg-primary))]"
-                                                        value={axis.min !== undefined ? axis.min : 'auto'}
+                                                        value={axis.min === 'auto' || axis.min === undefined ? '' : axis.min}
                                                         onChange={(e) => {
                                                             const val = e.target.value === 'auto' || e.target.value === '' ? 'auto' : Number(e.target.value);
                                                             setConfig(prev => ({
@@ -377,7 +377,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                                     <input
                                                         type="text"
                                                         className="p-1.5 border rounded text-xs bg-[hsl(var(--bg-primary))]"
-                                                        value={axis.max !== undefined ? axis.max : 'auto'}
+                                                        value={axis.max === 'auto' || axis.max === undefined ? '' : axis.max}
                                                         onChange={(e) => {
                                                             const val = e.target.value === 'auto' || e.target.value === '' ? 'auto' : Number(e.target.value);
                                                             setConfig(prev => ({
@@ -425,7 +425,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                 <input
                                     type="text"
                                     className="p-1.5 border rounded text-sm bg-[hsl(var(--bg-primary))]"
-                                    value={config.chartWidth !== undefined ? config.chartWidth : ''}
+                                    value={config.chartWidth === 'auto' ? '' : (config.chartWidth ?? '')}
                                     onChange={(e) => {
                                         const rawValue = e.target.value;
                                         if (rawValue === 'auto') {
@@ -447,7 +447,7 @@ export const FigureCreator = ({ rawData, mappings, onBack }: FigureCreatorProps)
                                             setConfig(prev => ({ ...prev, chartWidth: 'auto' }));
                                         }
                                     }}
-                                    placeholder="auto (e.g. 1000)"
+                                    placeholder={`auto (${Math.max(800, dataPoints.length * 30)})`}
                                 />
                                 <span className="text-[10px] text-[hsl(var(--text-secondary))]">
                                     画面に合わせる場合は空欄または'auto'。ピクセルで固定する場合は数値を入力してください。
